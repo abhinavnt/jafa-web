@@ -7,17 +7,20 @@ export const categoriesData = [
   {
     id: "dates-nuts",
     title: "DATES, NUTS & DRY FRUITS",
-    image: "/images/category-dates.jpg",
+    description: "Nature's finest, packed with goodness.",
+    image: "https://images.unsplash.com/photo-1477506350614-fcdc29a3b157?w=800&q=80",
   },
   {
     id: "gifts",
     title: "GIFTS",
-    image: "/images/category-gifts.jpg",
+    description: "Thoughtful gifts for every celebration.",
+    image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&q=80",
   },
   {
     id: "events-decor",
     title: "EVENTS & DECOR",
-    image: "/images/category-events.jpg",
+    description: "Making every moment unforgettable.",
+    image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80",
   },
 ];
 
