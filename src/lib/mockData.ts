@@ -58,7 +58,7 @@ export const exclusiveOffersData = [
     title: "Premium Ajwa Dates",
     originalPrice: 1599,
     price: 1199,
-    image: "/images/premium-ajwa.jpg",
+    image: "https://images.unsplash.com/photo-1596431945112-2358897c8d9e?w=800&q=80",
   },
   {
     id: "luxury-nut-mix-offer",
@@ -66,7 +66,7 @@ export const exclusiveOffersData = [
     title: "Luxury Nut Mix",
     originalPrice: 1499,
     price: 1199,
-    image: "/images/luxury-nut-mix.jpg",
+    image: "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=800&q=80",
   },
   {
     id: "pistachios-offer",
@@ -74,7 +74,7 @@ export const exclusiveOffersData = [
     title: "Pistachios",
     originalPrice: 1099,
     price: 899,
-    image: "/images/pistachios.jpg",
+    image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=800&q=80",
   },
   {
     id: "premium-gift-box-offer",
@@ -82,7 +82,7 @@ export const exclusiveOffersData = [
     title: "Premium Gift Box",
     originalPrice: 2399,
     price: 1799,
-    image: "/images/premium-gift-box.jpg",
+    image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&q=80",
   },
   {
     id: "medjool-dates-offer",
@@ -90,7 +90,7 @@ export const exclusiveOffersData = [
     title: "Medjool Dates",
     originalPrice: 1499,
     price: 1199,
-    image: "/images/medjool-dates.jpg",
+    image: "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=800&q=80",
   },
 ];
 
@@ -101,7 +101,7 @@ export const testimonialsData = [
     author: "Ayesha Khan",
     location: "Lucknow",
     rating: 5,
-    avatar: "/images/avatar-1.jpg",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
   },
   {
     id: 2,
@@ -109,7 +109,7 @@ export const testimonialsData = [
     author: "Mohammed Saif",
     location: "Hyderabad",
     rating: 5,
-    avatar: "/images/avatar-2.jpg",
+    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&q=80",
   },
   {
     id: 3,
@@ -117,6 +117,6 @@ export const testimonialsData = [
     author: "Neha Sharma",
     location: "Delhi",
     rating: 5,
-    avatar: "/images/avatar-3.jpg",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80",
   },
 ];

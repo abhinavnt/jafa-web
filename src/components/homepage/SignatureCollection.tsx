@@ -55,7 +55,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
   );
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 lg:px-6 pb-16 md:pb-20 lg:pb-24">
+    <section className="w-full max-w-7xl mx-auto px-4 lg:px-6 pb-16 md:pb-20 lg:pb-24 -mt-[3px]">
       {/* Section Title */}
       <div className="text-center mb-8 md:mb-12">
         <div className="flex items-center justify-center gap-3 mb-2">
