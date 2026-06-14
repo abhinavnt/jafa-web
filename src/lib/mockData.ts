@@ -120,3 +120,23 @@ export const testimonialsData = [
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80",
   },
 ];
+
+const baseShopProducts = [
+  { title: "Premium Ajwa Dates", price: 1299, originalPrice: 1699, badge: "25% OFF", rating: 4.9, reviews: 120, category: "Dates", image: "https://images.unsplash.com/photo-1596431945112-2358897c8d9e?w=500&q=80" },
+  { title: "Medjool Dates", price: 1499, originalPrice: 1899, badge: "20% OFF", rating: 4.8, reviews: 96, category: "Dates", image: "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=500&q=80" },
+  { title: "Kalmi Dates", price: 899, originalPrice: 1099, badge: "15% OFF", rating: 4.7, reviews: 64, category: "Dates", image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500&q=80" },
+  { title: "Premium Almonds", price: 899, originalPrice: 1199, badge: "15% OFF", rating: 4.8, reviews: 52, category: "Nuts", image: "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=500&q=80" },
+  { title: "Roasted Pistachios", price: 1199, originalPrice: 1499, badge: "15% OFF", rating: 4.7, reviews: 78, category: "Nuts", image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500&q=80" },
+  { title: "Mixed Dry Fruits", price: 1299, originalPrice: 1699, badge: "15% OFF", rating: 4.7, reviews: 13, category: "Dry Fruits", image: "https://images.unsplash.com/photo-1599577180575-802521151e3a?w=500&q=80" },
+  { title: "Iranian Dates", price: 1099, originalPrice: 1399, badge: "15% OFF", rating: 4.6, reviews: 55, category: "Dates", image: "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=500&q=80" },
+  { title: "California Almonds", price: 1049, originalPrice: 1299, badge: "25% OFF", rating: 4.8, reviews: 89, category: "Nuts", image: "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=500&q=80" },
+  { title: "Black Raisins", price: 699, originalPrice: 899, badge: "25% OFF", rating: 4.6, reviews: 40, category: "Dry Fruits", image: "https://images.unsplash.com/photo-1599577180575-802521151e3a?w=500&q=80" },
+  { title: "Dry Apricots", price: 749, originalPrice: 949, badge: "15% OFF", rating: 4.5, reviews: 36, category: "Dry Fruits", image: "https://images.unsplash.com/photo-1596431945112-2358897c8d9e?w=500&q=80" },
+  { title: "Walnut Kernels", price: 899, originalPrice: 1049, badge: "15% OFF", rating: 4.7, reviews: 68, category: "Nuts", image: "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=500&q=80" },
+  { title: "Premium Cashews", price: 999, originalPrice: 1249, badge: "10% OFF", rating: 4.8, reviews: 57, category: "Nuts", image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500&q=80" },
+];
+
+export const shopProducts = Array.from({ length: 64 }).map((_, i) => ({
+  id: `product-${i + 1}`,
+  ...baseShopProducts[i % baseShopProducts.length],
+}));
