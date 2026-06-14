@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Star, ArrowRight } from 'lucide-react';
 
 export interface ShopProduct {
@@ -12,6 +13,10 @@ export interface ShopProduct {
   rating: number;
   reviews: number;
   category: string;
+  images?: string[];
+  description?: string;
+  soldCount?: string;
+  sizes?: { label: string; weight: string; price: number; popular?: boolean }[];
 }
 
 interface ProductCardProps {
@@ -20,7 +25,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square">
+    <Link href={`/dates-nuts/${product.id}`} className="bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square">
       
       {/* Image Area */}
       <div className="relative h-[55%] w-full bg-[#EAE2D8]">
@@ -73,6 +78,6 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-    </div>
+    </Link>
   );
 }
