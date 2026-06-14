@@ -2,19 +2,26 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Menu } from 'lucide-react';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navLinks = [
-    { label: 'Home', href: '/', active: true },
+    { label: 'Home', href: '/' },
     { label: 'Dates & Nuts', href: '/dates-nuts' },
-    { label: 'Gifts', href: '#' },
-    { label: 'Event & Decor', href: '#' },
-    { label: 'About Us', href: '#' },
-    { label: 'Contact Us', href: '#' },
+    { label: 'Gifts', href: '/gifts' },
+    { label: 'Event & Decor', href: '/events' },
+    { label: 'About Us', href: '/about' },
+    { label: 'Contact Us', href: '/contact' },
   ];
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+  };
 
   return (
     <nav className="w-full bg-transparent py-4 md:py-6 px-4 md:px-8 flex items-center justify-between z-50 max-w-7xl mx-auto">
@@ -29,13 +36,13 @@ export default function Navbar() {
           <Link
             key={link.label}
             href={link.href}
-            className={`relative group transition-colors hover:text-opacity-80 ${link.active ? 'text-foreground' : 'text-foreground/80'}`}
+            className={`relative group transition-colors hover:text-opacity-80 ${isActive(link.href) ? 'text-foreground' : 'text-foreground/80'}`}
           >
             {link.label}
-            {link.active && (
+            {isActive(link.href) && (
               <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-foreground mx-auto w-full"></span>
             )}
-            {!link.active && (
+            {!isActive(link.href) && (
               <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-foreground mx-auto w-0 transition-all duration-300 group-hover:w-full"></span>
             )}
           </Link>
@@ -72,7 +79,7 @@ export default function Navbar() {
               key={link.label}
               href={link.href}
               onClick={() => setIsMenuOpen(false)}
-              className={link.active ? 'font-bold' : 'opacity-80 hover:opacity-100'}
+              className={isActive(link.href) ? 'font-bold' : 'opacity-80 hover:opacity-100'}
             >
               {link.label}
             </Link>
