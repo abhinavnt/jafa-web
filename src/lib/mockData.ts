@@ -31,7 +31,7 @@ export const signatureCollectionData = [
     title: "Royal Ajwa Dates",
     description: "Exquisite Ajwa dates from Madinah, known for their rich taste and exceptional quality.",
     price: 1299,
-    image: "/images/royal-ajwa.jpg",
+    image: "https://images.unsplash.com/photo-1629738601425-494c3d6ba3e2?q=80&w=1171",
   },
   {
     id: "luxury-nut-box",
@@ -39,7 +39,7 @@ export const signatureCollectionData = [
     title: "Luxury Nut Box",
     description: "A perfect blend of premium nuts, beautifully arranged for every occasion.",
     price: 1899,
-    image: "/images/luxury-nut-box.jpg",
+    image: "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=800&q=80",
   },
   {
     id: "ramadan-hamper",
@@ -47,7 +47,7 @@ export const signatureCollectionData = [
     title: "Ramadan Gift Hamper",
     description: "A luxurious hamper to celebrate the spirit of Ramadan with your loved ones.",
     price: 2499,
-    image: "/images/ramadan-hamper.jpg",
+    image: "https://images.unsplash.com/photo-1512909006721-3d6018887383?w=800&q=80",
   },
 ];
 
