@@ -13,7 +13,7 @@ export default function Navbar() {
     { label: 'Home', href: '/' },
     { label: 'Dates & Nuts', href: '/dates-nuts' },
     { label: 'Gifts', href: '/gifts' },
-    { label: 'Event & Decor', href: '/events' },
+    { label: 'Event & Decor', href: '/events-decor' },
     { label: 'About Us', href: '/about' },
     { label: 'Contact Us', href: '/contact' },
   ];

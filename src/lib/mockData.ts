@@ -171,3 +171,17 @@ export const giftProducts = Array.from({ length: 64 }).map((_, i) => ({
   id: `gift-${i + 1}`,
   ...baseGiftProducts[i % baseGiftProducts.length],
 }));
+
+const baseEvents = [
+  { category: "Weddings", title: "Timeless & Elegant", image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80" },
+  { category: "Corporate Events", title: "Professional & Impactful", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80" },
+  { category: "Private Celebrations", title: "Personalized & Memorable", image: "https://images.unsplash.com/photo-1530103862676-de8892bf30b5?w=800&q=80" },
+  { category: "Social Gatherings", title: "Joyful & Warm", image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&q=80" },
+  { category: "Stage & Themes", title: "Creative & Immersive", image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800&q=80" },
+  { category: "Floral & Decor", title: "Artistry in Every Detail", image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=800&q=80" },
+];
+
+export const eventsData = Array.from({ length: 64 }).map((_, i) => ({
+  id: `event-${i + 1}`,
+  ...baseEvents[i % baseEvents.length],
+}));
