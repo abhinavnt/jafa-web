@@ -155,3 +155,19 @@ export const shopProducts = Array.from({ length: 64 }).map((_, i) => ({
   id: `product-${i + 1}`,
   ...baseShopProducts[i % baseShopProducts.length],
 }));
+
+const baseGiftProducts = [
+  { title: "Royal Signature Hamper", price: 2499, originalPrice: 3099, badge: "20% OFF", rating: 4.8, reviews: 120, category: "Gift Hampers", image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500&q=80", images: baseImages, description: baseDescription, soldCount: "150+", sizes: baseSizes },
+  { title: "Luxury Oud Perfume", price: 1499, originalPrice: 1699, badge: "10% OFF", rating: 4.9, reviews: 98, category: "Perfumes", image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&q=80", images: baseImages, description: baseDescription, soldCount: "300+", sizes: baseSizes },
+  { title: "Premium Wooden Box", price: 1899, originalPrice: 2100, badge: "10% OFF", rating: 4.6, reviews: 121, category: "Personalized Gifts", image: "https://images.unsplash.com/photo-1512909006721-3d6018887383?w=500&q=80", images: baseImages, description: baseDescription, soldCount: "80+", sizes: baseSizes },
+  { title: "Deluxe Gift Hamper", price: 2199, originalPrice: 2699, badge: "20% OFF", rating: 4.8, reviews: 152, category: "Gift Hampers", image: "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=500&q=80", images: baseImages, description: baseDescription, soldCount: "210+", sizes: baseSizes },
+  { title: "Golden Rose Dome", price: 1299, originalPrice: 1599, badge: "15% OFF", rating: 4.7, reviews: 64, category: "Decor & Lifestyle", image: "https://images.unsplash.com/photo-1520697920101-d7d8e878e342?w=500&q=80", images: baseImages, description: baseDescription, soldCount: "50+", sizes: baseSizes },
+  { title: "Executive Gift Set", price: 3149, originalPrice: 3499, badge: "10% OFF", rating: 4.9, reviews: 81, category: "Corporate Gifting", image: "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=500&q=80", images: baseImages, description: baseDescription, soldCount: "120+", sizes: baseSizes },
+  { title: "Artisan Tea Gift Box", price: 1199, originalPrice: 1499, badge: "20% OFF", rating: 4.6, reviews: 41, category: "Combo Gifts", image: "https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?w=500&q=80", images: baseImages, description: baseDescription, soldCount: "90+", sizes: baseSizes },
+  { title: "Nutty Delight Hamper", price: 1749, originalPrice: 2199, badge: "20% OFF", rating: 4.8, reviews: 62, category: "Gift Hampers", image: "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=500&q=80", images: baseImages, description: baseDescription, soldCount: "350+", sizes: baseSizes },
+];
+
+export const giftProducts = Array.from({ length: 64 }).map((_, i) => ({
+  id: `gift-${i + 1}`,
+  ...baseGiftProducts[i % baseGiftProducts.length],
+}));

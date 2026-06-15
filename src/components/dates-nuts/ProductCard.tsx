@@ -24,8 +24,11 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const isGift = product.id.startsWith('gift-');
+  const basePath = isGift ? '/gifts' : '/dates-nuts';
+
   return (
-    <Link href={`/dates-nuts/${product.id}`} className="bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square">
+    <Link href={`${basePath}/${product.id}`} className="bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square">
       
       {/* Image Area */}
       <div className="relative h-[55%] w-full bg-[#EAE2D8]">
