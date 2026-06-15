@@ -41,6 +41,8 @@ export default function EventsClient() {
     setSearchQuery('');
   };
 
+  const hasSearchFilter = debouncedSearch.length > 0;
+
   return (
     <>
       <EventsHero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -56,15 +58,17 @@ export default function EventsClient() {
             <div className="w-8 h-px bg-[#DCD0C3]"></div>
           </div>
           <h2 className="font-lora text-[#2A1A12] text-[28px] md:text-[40px] lg:text-[48px] leading-tight">
-            Celebrations We&apos;ve Crafted
+            {hasSearchFilter ? 'Search Results' : "Celebrations We've Crafted"}
           </h2>
         </div>
       </div>
 
-      <EventsCategories 
-        activeCategory={activeCategory} 
-        onSelectCategory={handleCategorySelect} 
-      />
+      {!hasSearchFilter && (
+        <EventsCategories 
+          activeCategory={activeCategory} 
+          onSelectCategory={handleCategorySelect} 
+        />
+      )}
 
       <EventsGallery events={filteredEvents} />
       
