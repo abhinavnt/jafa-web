@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 export interface EventItem {
@@ -43,9 +44,10 @@ export default function EventsGallery({ events }: EventsGalleryProps) {
       {currentEvents.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
           {currentEvents.map((event) => (
-            <div 
+            <Link 
               key={event.id} 
-              className="relative rounded-2xl overflow-hidden aspect-[16/9] md:aspect-[2/1] group cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+              href={`/events-decor/${event.id}`}
+              className="relative rounded-2xl overflow-hidden aspect-[16/9] md:aspect-[2/1] group cursor-pointer shadow-sm hover:shadow-md transition-shadow block"
             >
               <Image 
                 src={event.image}
@@ -69,7 +71,7 @@ export default function EventsGallery({ events }: EventsGalleryProps) {
                   <ArrowRight size={16} className="text-[#2A1A12] opacity-50 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       ) : (

@@ -172,16 +172,127 @@ export const giftProducts = Array.from({ length: 64 }).map((_, i) => ({
   ...baseGiftProducts[i % baseGiftProducts.length],
 }));
 
+export interface EventItem {
+  id: string;
+  category: string;
+  title: string;
+  image: string;
+  images: string[];
+  description: string;
+  badge?: string;
+  specs: {
+    eventType: string;
+    guestCapacity: string;
+    eventLocation: string;
+    duration: string;
+    ourService: string;
+  };
+  aboutEvent: string;
+}
+
 const baseEvents = [
-  { category: "Weddings", title: "Timeless & Elegant", image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80" },
-  { category: "Corporate Events", title: "Professional & Impactful", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80" },
-  { category: "Private Celebrations", title: "Personalized & Memorable", image: "https://images.unsplash.com/photo-1530103862676-de8892bf30b5?w=800&q=80" },
-  { category: "Social Gatherings", title: "Joyful & Warm", image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&q=80" },
-  { category: "Stage & Themes", title: "Creative & Immersive", image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800&q=80" },
-  { category: "Floral & Decor", title: "Artistry in Every Detail", image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=800&q=80" },
+  { 
+    category: "Weddings", 
+    title: "Timeless Elegance Wedding", 
+    image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80",
+      "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&q=80",
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&q=80",
+      "https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800&q=80"
+    ],
+    description: "A sophisticated wedding setup with timeless decor, floral arrangements, and elegant detailing to make your special day unforgettable.",
+    badge: "FEATURED EVENT",
+    specs: {
+      eventType: "Wedding",
+      guestCapacity: "100 - 500 Guests",
+      eventLocation: "Indoor / Outdoor",
+      duration: "1 Day Event",
+      ourService: "Full Planning & Management"
+    },
+    aboutEvent: "Timeless Elegance Wedding is designed for couples who envision a classic yet luxurious celebration. From grand floral installations to exquisite table settings, every element is carefully curated to create beautiful memories that last a lifetime."
+  },
+  { 
+    category: "Corporate Events", 
+    title: "Professional & Impactful", 
+    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80",
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80"
+    ],
+    description: "A premium corporate event setup designed to leave a lasting impression on your clients and stakeholders.",
+    specs: {
+      eventType: "Corporate Gathering",
+      guestCapacity: "50 - 200 Guests",
+      eventLocation: "Indoor Venue",
+      duration: "Half / Full Day",
+      ourService: "Setup & Management"
+    },
+    aboutEvent: "Elevate your brand's presence with our professional corporate event styling. We ensure seamless execution and sophisticated decor."
+  },
+  { 
+    category: "Private Celebrations", 
+    title: "Personalized & Memorable", 
+    image: "https://images.unsplash.com/photo-1530103862676-de8892bf30b5?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1530103862676-de8892bf30b5?w=800&q=80"],
+    description: "An intimate and highly personalized setup tailored for exclusive private gatherings.",
+    specs: {
+      eventType: "Private Party",
+      guestCapacity: "20 - 50 Guests",
+      eventLocation: "Private Villa / Resort",
+      duration: "Evening Event",
+      ourService: "Decor & Catering Management"
+    },
+    aboutEvent: "Celebrate your milestones in absolute privacy and style. Our private celebration packages are completely customizable."
+  },
+  { 
+    category: "Social Gatherings", 
+    title: "Joyful & Warm", 
+    image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&q=80"],
+    description: "Vibrant and warm decor perfect for birthdays, anniversaries, and casual get-togethers.",
+    specs: {
+      eventType: "Social Event",
+      guestCapacity: "30 - 100 Guests",
+      eventLocation: "Outdoor Garden",
+      duration: "Evening Event",
+      ourService: "Full Decor Setup"
+    },
+    aboutEvent: "Bring your loved ones together in a beautifully styled setting designed for warmth and connection."
+  },
+  { 
+    category: "Stage & Themes", 
+    title: "Creative & Immersive", 
+    image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800&q=80"],
+    description: "Immersive thematic stage designs that transport your guests to another world.",
+    specs: {
+      eventType: "Themed Gala",
+      guestCapacity: "200 - 1000 Guests",
+      eventLocation: "Banquet Hall",
+      duration: "Multi-Day Event",
+      ourService: "Stage Design & Lighting"
+    },
+    aboutEvent: "Our creative team specializes in building breathtaking stages and immersive environments for large-scale events."
+  },
+  { 
+    category: "Floral & Decor", 
+    title: "Artistry in Every Detail", 
+    image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=800&q=80"],
+    description: "Exquisite floral arrangements that add a touch of natural elegance to any space.",
+    specs: {
+      eventType: "Floral Styling",
+      guestCapacity: "N/A",
+      eventLocation: "Any Venue",
+      duration: "Setup Duration: 4 Hours",
+      ourService: "Floral Installations"
+    },
+    aboutEvent: "Flowers are the soul of any event. Our expert florists source the freshest blooms to craft stunning installations."
+  },
 ];
 
-export const eventsData = Array.from({ length: 64 }).map((_, i) => ({
+export const eventsData: EventItem[] = Array.from({ length: 64 }).map((_, i) => ({
   id: `event-${i + 1}`,
   ...baseEvents[i % baseEvents.length],
 }));
