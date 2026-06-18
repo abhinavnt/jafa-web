@@ -54,6 +54,8 @@ export default async function ProductDetailsPage({ params }: ProductPageProps) {
     description: dbProduct.description || '',
     badge: dbProduct.is_new ? 'NEW' : (dbProduct.original_price ? 'SALE' : undefined),
     status: dbProduct.status,
+    rating: 4.8,
+    reviews: 120,
   };
 
   return (

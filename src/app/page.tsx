@@ -28,6 +28,7 @@ export default async function Home() {
   const { data: categoriesData } = await supabase
     .from('categories')
     .select('*')
+    .order('display_order', { ascending: true })
     .order('created_at', { ascending: true })
     .limit(3);
 

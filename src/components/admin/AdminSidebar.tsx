@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Gift, CalendarHeart, Nut, Megaphone, Settings, LayoutGrid } from 'lucide-react';
+import { LayoutDashboard, Gift, CalendarHeart, Nut, Megaphone, Settings, LayoutGrid, FolderTree } from 'lucide-react';
 
 export default function AdminSidebar() {
   const pathname = usePathname();

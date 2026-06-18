@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
-import { Plus, Trash2, Edit, X, Image as ImageIcon, LayoutGrid } from 'lucide-react';
+import { Plus, Trash2, Edit, X, Image as ImageIcon, LayoutGrid, ArrowUp, ArrowDown } from 'lucide-react';
 
 export default function CategoriesAdmin() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -25,6 +25,7 @@ export default function CategoriesAdmin() {
     const { data, error } = await supabase
       .from('categories')
       .select('*')
+      .order('display_order', { ascending: true })
       .order('created_at', { ascending: true });
       
     if (data) setCategories(data);
@@ -71,11 +72,39 @@ export default function CategoriesAdmin() {
       if (!error) closeModal();
       else alert('Error updating category: ' + error.message);
     } else {
-      const { error } = await supabase.from('categories').insert([categoryData]);
+      const { error } = await supabase.from('categories').insert([{ ...categoryData, display_order: categories.length }]);
       if (!error) closeModal();
       else alert('Error adding category: ' + error.message);
     }
     
+    fetchCategories();
+  };
+
+  const handleMoveUp = async (index: number) => {
+    if (index === 0) return;
+    setLoading(true);
+    const newCategories = [...categories];
+    const temp = newCategories[index];
+    newCategories[index] = newCategories[index - 1];
+    newCategories[index - 1] = temp;
+    
+    for (let i = 0; i < newCategories.length; i++) {
+      await supabase.from('categories').update({ display_order: i }).eq('id', newCategories[i].id);
+    }
+    fetchCategories();
+  };
+
+  const handleMoveDown = async (index: number) => {
+    if (index === categories.length - 1) return;
+    setLoading(true);
+    const newCategories = [...categories];
+    const temp = newCategories[index];
+    newCategories[index] = newCategories[index + 1];
+    newCategories[index + 1] = temp;
+    
+    for (let i = 0; i < newCategories.length; i++) {
+      await supabase.from('categories').update({ display_order: i }).eq('id', newCategories[i].id);
+    }
     fetchCategories();
   };
 
@@ -161,8 +190,24 @@ export default function CategoriesAdmin() {
                       </div>
                     </td>
                     <td className="p-4 text-[#5C3D2E] text-sm max-w-xs truncate">{c.description}</td>
-                    <td className="p-4 text-right">
-                      <button onClick={() => openEditModal(c)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors mr-1">
+                    <td className="p-4 text-right flex items-center justify-end gap-1">
+                      <button 
+                        onClick={() => handleMoveUp(categories.indexOf(c))} 
+                        disabled={categories.indexOf(c) === 0}
+                        className={`p-2 rounded transition-colors ${categories.indexOf(c) === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-[#8B3A2B] hover:bg-[#F8F2EA]'}`}
+                        title="Move Up"
+                      >
+                        <ArrowUp size={16} />
+                      </button>
+                      <button 
+                        onClick={() => handleMoveDown(categories.indexOf(c))} 
+                        disabled={categories.indexOf(c) === categories.length - 1}
+                        className={`p-2 rounded transition-colors mr-2 ${categories.indexOf(c) === categories.length - 1 ? 'text-gray-300 cursor-not-allowed' : 'text-[#8B3A2B] hover:bg-[#F8F2EA]'}`}
+                        title="Move Down"
+                      >
+                        <ArrowDown size={16} />
+                      </button>
+                      <button onClick={() => openEditModal(c)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">
                         <Edit size={16} />
                       </button>
                       <button onClick={() => handleDelete(c.id)} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors">

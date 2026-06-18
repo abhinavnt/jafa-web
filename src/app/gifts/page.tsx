@@ -28,6 +28,8 @@ export default async function GiftsPage() {
     description: p.description || '',
     badge: p.is_new ? 'NEW' : (p.original_price ? 'SALE' : undefined),
     status: p.status,
+    rating: 4.8,
+    reviews: 120,
   }));
 
   return (

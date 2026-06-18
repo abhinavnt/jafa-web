@@ -2,12 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
-import { Plus, Trash2, Edit, X, Image as ImageIcon, Gift } from 'lucide-react';
+import { Plus, Trash2, Edit, X, Image as ImageIcon, Gift, FolderPlus } from 'lucide-react';
 
 export default function GiftsAdmin() {
   const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   
   // Form State
@@ -21,11 +23,24 @@ export default function GiftsAdmin() {
     status: 'In Stock',
     is_exclusive: false,
   });
+
+  const [categoryFormData, setCategoryFormData] = useState({ id: '', title: '' });
   
   const supabase = createClient();
 
-  const fetchProducts = async () => {
+  const fetchProductsAndCategories = async () => {
     setLoading(true);
+    
+    // Fetch Categories
+    const { data: catData } = await supabase
+      .from('product_categories')
+      .select('*')
+      .eq('section', 'gifts')
+      .order('title', { ascending: true });
+      
+    if (catData) setCategories(catData);
+
+    // Fetch Products
     const { data, error } = await supabase
       .from('products')
       .select('*')
@@ -37,7 +52,7 @@ export default function GiftsAdmin() {
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchProductsAndCategories();
   }, []);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,13 +92,54 @@ export default function GiftsAdmin() {
       if (!error) closeModal();
     }
     
-    fetchProducts();
+    fetchProductsAndCategories();
+  };
+
+  const handleCategorySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (categoryFormData.id) {
+      // Edit
+      const { error } = await supabase.from('product_categories').update({ title: categoryFormData.title }).eq('id', categoryFormData.id);
+      if (!error) {
+        setIsCategoryModalOpen(false);
+        setCategoryFormData({ id: '', title: '' });
+        fetchProductsAndCategories();
+      } else {
+        alert('Error updating category: ' + error.message);
+      }
+    } else {
+      // Add
+      const { error } = await supabase.from('product_categories').insert([{ title: categoryFormData.title, section: 'gifts' }]);
+      if (!error) {
+        setIsCategoryModalOpen(false);
+        setCategoryFormData({ id: '', title: '' });
+        fetchProductsAndCategories();
+      } else {
+        alert('Error adding category: ' + error.message);
+      }
+    }
+  };
+
+  const handleCategoryDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this category? Make sure no products are using it.')) return;
+    await supabase.from('product_categories').delete().eq('id', id);
+    fetchProductsAndCategories();
+  };
+
+  const openCategoryEditModal = (category: any) => {
+    setCategoryFormData({ id: category.id, title: category.title });
+    setIsCategoryModalOpen(true);
+  };
+
+  const openCategoryAddModal = () => {
+    setCategoryFormData({ id: '', title: '' });
+    setIsCategoryModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this gift product?')) return;
     await supabase.from('products').delete().eq('id', id);
-    fetchProducts();
+    fetchProductsAndCategories();
   };
 
   const openEditModal = (product: any) => {
@@ -124,12 +180,20 @@ export default function GiftsAdmin() {
           </div>
         </div>
         
-        <button 
-          onClick={openAddModal}
-          className="bg-[#2A1A12] text-white px-5 py-2.5 rounded font-bold uppercase tracking-wider text-xs hover:bg-[#4A2C11] transition-colors flex items-center gap-2"
-        >
-          <Plus size={16} /> Add Gift Box
-        </button>
+        <div className="flex gap-3">
+          <button 
+            onClick={openCategoryAddModal}
+            className="bg-white border border-[#DCD0C3] text-[#5C3D2E] px-5 py-2.5 rounded font-bold uppercase tracking-wider text-xs hover:bg-[#F8F2EA] transition-colors flex items-center gap-2"
+          >
+            <FolderPlus size={16} /> Add Category
+          </button>
+          <button 
+            onClick={openAddModal}
+            className="bg-[#2A1A12] text-white px-5 py-2.5 rounded font-bold uppercase tracking-wider text-xs hover:bg-[#4A2C11] transition-colors flex items-center gap-2"
+          >
+            <Plus size={16} /> Add Gift Box
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border border-[#DCD0C3] shadow-sm overflow-hidden">
@@ -139,7 +203,7 @@ export default function GiftsAdmin() {
               <tr className="bg-[#F8F2EA] border-b border-[#DCD0C3] text-[#5C3D2E] text-xs uppercase tracking-wider">
                 <th className="p-4 font-bold">Gift Set</th>
                 <th className="p-4 font-bold">Category</th>
-                <th className="p-4 font-bold">Price (AED)</th>
+                <th className="p-4 font-bold">Price</th>
                 <th className="p-4 font-bold">Status</th>
                 <th className="p-4 font-bold text-right">Actions</th>
               </tr>
@@ -174,6 +238,39 @@ export default function GiftsAdmin() {
                         <Edit size={16} />
                       </button>
                       <button onClick={() => handleDelete(p.id)} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors">
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="mt-12">
+        <h3 className="text-xl font-bold text-[#2A1A12] mb-6">Manage Categories</h3>
+        <div className="bg-white rounded-xl border border-[#DCD0C3] shadow-sm overflow-hidden max-w-2xl">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-[#F8F2EA] border-b border-[#DCD0C3] text-[#5C3D2E] text-xs uppercase tracking-wider">
+                <th className="p-4 font-bold">Category Title</th>
+                <th className="p-4 font-bold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#DCD0C3]">
+              {categories.length === 0 ? (
+                <tr><td colSpan={2} className="p-8 text-center text-[#5C3D2E]">No categories added yet.</td></tr>
+              ) : (
+                categories.map((c) => (
+                  <tr key={c.id} className="hover:bg-[#F8F2EA]/50 transition-colors">
+                    <td className="p-4 font-medium text-[#2A1A12]">{c.title}</td>
+                    <td className="p-4 text-right">
+                      <button onClick={() => openCategoryEditModal(c)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors mr-1">
+                        <Edit size={16} />
+                      </button>
+                      <button onClick={() => handleCategoryDelete(c.id)} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors">
                         <Trash2 size={16} />
                       </button>
                     </td>
@@ -237,21 +334,19 @@ export default function GiftsAdmin() {
                   <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Category *</label>
                   <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required>
                     <option value="">Select Category...</option>
-                    <option value="Gift Hampers">Gift Hampers</option>
-                    <option value="Combo Gifts">Combo Gifts</option>
-                    <option value="Personalized Gifts">Personalized Gifts</option>
-                    <option value="Corporate Gifting">Corporate Gifting</option>
-                    <option value="Perfumes">Perfumes</option>
+                    {categories.map(c => (
+                      <option key={c.id} value={c.title}>{c.title}</option>
+                    ))}
                   </select>
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
-                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Current Price (AED)</label>
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Current Price</label>
                   <input type="number" step="0.01" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
-                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Original Price (AED)</label>
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Original Price</label>
                   <input type="number" step="0.01" value={formData.original_price} onChange={e => setFormData({...formData, original_price: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
                 </div>
 
@@ -285,6 +380,28 @@ export default function GiftsAdmin() {
               <button type="submit" form="productForm" className="px-6 py-2 bg-[#8B3A2B] rounded text-white text-sm font-bold tracking-wider hover:bg-[#6A2A1F] transition-colors">
                 {editingId ? 'Save Changes' : 'Create Gift Box'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Category Modal */}
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col">
+            <div className="px-6 py-4 border-b border-[#DCD0C3] flex justify-between items-center bg-[#F8F2EA]">
+              <h3 className="font-bold text-[#2A1A12] text-lg">{categoryFormData.id ? 'Edit Category' : 'Add New Category'}</h3>
+              <button onClick={() => setIsCategoryModalOpen(false)} className="text-[#5C3D2E] hover:text-[#2A1A12]"><X size={20} /></button>
+            </div>
+            <div className="p-6">
+              <form id="categoryForm" onSubmit={handleCategorySubmit}>
+                <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Category Title *</label>
+                <input type="text" value={categoryFormData.title} onChange={e => setCategoryFormData({...categoryFormData, title: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required placeholder="e.g. Perfumes" />
+              </form>
+            </div>
+            <div className="px-6 py-4 border-t border-[#DCD0C3] bg-[#F8F2EA] flex justify-end gap-3">
+              <button onClick={() => setIsCategoryModalOpen(false)} className="px-4 py-2 border border-[#DCD0C3] rounded text-sm font-bold text-[#5C3D2E] hover:bg-white transition-colors">Cancel</button>
+              <button type="submit" form="categoryForm" className="px-6 py-2 bg-[#8B3A2B] rounded text-white text-sm font-bold tracking-wider hover:bg-[#6A2A1F] transition-colors">Save Category</button>
             </div>
           </div>
         </div>

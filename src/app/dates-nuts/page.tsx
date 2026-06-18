@@ -28,6 +28,8 @@ export default async function DatesAndNutsPage() {
     description: p.description || '',
     badge: p.is_new ? 'NEW' : (p.original_price ? 'SALE' : undefined),
     status: p.status,
+    rating: 4.8,
+    reviews: 120,
   }));
 
   const { data: exclusiveOffersData } = await supabase
@@ -45,6 +47,9 @@ export default async function DatesAndNutsPage() {
     originalPrice: p.original_price,
     image: p.image,
     badge: 'SALE',
+    rating: 4.8,
+    reviews: 120,
+    category: p.category,
   }));
 
   return (
