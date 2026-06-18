@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductClient from '@/components/product-details/ProductClient';
-import { shopProducts } from '@/lib/mockData';
+import { createPublicClient } from '@/lib/supabase';
 
 interface ProductPageProps {
   params: Promise<{
@@ -13,7 +13,12 @@ interface ProductPageProps {
 
 export async function generateMetadata({ params }: ProductPageProps) {
   const resolvedParams = await params;
-  const product = shopProducts.find((p) => p.id === resolvedParams.id);
+  const supabase = createPublicClient();
+  const { data: product } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', resolvedParams.id)
+    .single();
   
   if (!product) {
     return { title: 'Product Not Found | Jafa' };
@@ -27,17 +32,35 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
 export default async function ProductDetailsPage({ params }: ProductPageProps) {
   const resolvedParams = await params;
-  const product = shopProducts.find((p) => p.id === resolvedParams.id);
+  const supabase = createPublicClient();
+  const { data: dbProduct } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', resolvedParams.id)
+    .single();
 
-  if (!product) {
+  if (!dbProduct) {
     notFound();
   }
+
+  const mappedProduct = {
+    id: dbProduct.id,
+    title: dbProduct.title,
+    category: dbProduct.category,
+    price: dbProduct.price,
+    originalPrice: dbProduct.original_price,
+    image: dbProduct.image,
+    images: [dbProduct.image, dbProduct.hover_image].filter(Boolean),
+    description: dbProduct.description || '',
+    badge: dbProduct.is_new ? 'NEW' : (dbProduct.original_price ? 'SALE' : undefined),
+    status: dbProduct.status,
+  };
 
   return (
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
       <Navbar />
       <div className="flex-grow">
-        <ProductClient product={product} />
+        <ProductClient product={mappedProduct} />
       </div>
       <Footer />
     </main>

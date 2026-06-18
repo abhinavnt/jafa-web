@@ -11,6 +11,8 @@ interface ExclusiveOffersProps {
 export default function ExclusiveOffers({ products }: ExclusiveOffersProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  if (!products || products.length === 0) return null;
+
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });

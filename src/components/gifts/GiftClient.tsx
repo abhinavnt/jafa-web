@@ -5,9 +5,13 @@ import GiftsHero from './GiftsHero';
 import GiftCategories from './GiftCategories';
 import GiftFeatures from './GiftFeatures';
 import ProductGrid from '../dates-nuts/ProductGrid';
-import { giftProducts } from '@/lib/mockData';
+import { ShopProduct } from '../dates-nuts/ProductCard';
 
-export default function GiftClient() {
+interface GiftClientProps {
+  products: ShopProduct[];
+}
+
+export default function GiftClient({ products }: GiftClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -20,7 +24,7 @@ export default function GiftClient() {
 
   // Filter products based on category and search
   const filteredProducts = useMemo(() => {
-    let filtered = giftProducts;
+    let filtered = products;
 
     if (activeCategory !== 'All') {
       const categoryMapping: Record<string, string> = {

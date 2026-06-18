@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import GiftProductClient from '@/components/product-details/GiftProductClient';
-import { giftProducts } from '@/lib/mockData';
+import { createPublicClient } from '@/lib/supabase';
 
 interface GiftPageProps {
   params: Promise<{
@@ -13,7 +13,12 @@ interface GiftPageProps {
 
 export async function generateMetadata({ params }: GiftPageProps) {
   const resolvedParams = await params;
-  const product = giftProducts.find((p) => p.id === resolvedParams.id);
+  const supabase = createPublicClient();
+  const { data: product } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', resolvedParams.id)
+    .single();
   
   if (!product) {
     return { title: 'Gift Not Found | Jafa' };
@@ -27,11 +32,29 @@ export async function generateMetadata({ params }: GiftPageProps) {
 
 export default async function GiftDetailsPage({ params }: GiftPageProps) {
   const resolvedParams = await params;
-  const product = giftProducts.find((p) => p.id === resolvedParams.id);
+  const supabase = createPublicClient();
+  const { data: dbProduct } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', resolvedParams.id)
+    .single();
 
-  if (!product) {
+  if (!dbProduct) {
     notFound();
   }
+
+  const mappedProduct = {
+    id: dbProduct.id,
+    title: dbProduct.title,
+    category: dbProduct.category,
+    price: dbProduct.price,
+    originalPrice: dbProduct.original_price,
+    image: dbProduct.image,
+    images: [dbProduct.image, dbProduct.hover_image].filter(Boolean),
+    description: dbProduct.description || '',
+    badge: dbProduct.is_new ? 'NEW' : (dbProduct.original_price ? 'SALE' : undefined),
+    status: dbProduct.status,
+  };
 
   return (
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
@@ -39,7 +62,7 @@ export default async function GiftDetailsPage({ params }: GiftPageProps) {
         <Navbar />
       </div>
       <div className="flex-grow">
-        <GiftProductClient product={product} />
+        <GiftProductClient product={mappedProduct} />
       </div>
       <Footer />
     </main>

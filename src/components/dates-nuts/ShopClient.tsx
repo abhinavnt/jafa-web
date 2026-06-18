@@ -4,11 +4,11 @@ import ShopHero from './ShopHero';
 import CategoryPills, { CategoryData } from './CategoryPills';
 import ProductGrid from './ProductGrid';
 import { ShopProduct } from './ProductCard';
-import { exclusiveOffersData } from '@/lib/mockData';
 import ExclusiveOffers from '../homepage/ExclusiveOffers';
 
 interface ShopClientProps {
   products: ShopProduct[];
+  exclusiveOffers: any[];
 }
 
 const shopCategories: CategoryData[] = [
@@ -19,15 +19,15 @@ const shopCategories: CategoryData[] = [
   { id: 'Combos', title: 'Combos', subtitle: 'Perfectly curated', image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=200&q=80' },
 ];
 
-export default function ShopClient({ products }: ShopClientProps) {
+export default function ShopClient({ products, exclusiveOffers }: ShopClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
   // Filter exclusive offers
   const filteredExclusiveOffers = useMemo(() => {
-    if (!searchQuery) return exclusiveOffersData;
+    if (!searchQuery) return exclusiveOffers;
     const searchLower = searchQuery.toLowerCase();
-    return exclusiveOffersData.filter(offer => 
+    return exclusiveOffers.filter(offer => 
       offer.title.toLowerCase().includes(searchLower)
     );
   }, [searchQuery]);

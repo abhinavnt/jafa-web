@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Gem, Flower2, ClipboardList, Award, Calendar, Users, MapPin, Clock, Settings } from 'lucide-react';
-import { EventItem } from '@/lib/mockData';
+import { EventItem } from './EventClient';
 
 interface EventInfoProps {
   event: EventItem;

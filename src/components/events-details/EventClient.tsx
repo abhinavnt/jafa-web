@@ -1,7 +1,23 @@
 'use client';
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
-import { EventItem } from '@/lib/mockData';
+export interface EventItem {
+  id: string;
+  title: string;
+  category: string;
+  image: string;
+  images: string[];
+  description: string;
+  badge?: string;
+  aboutEvent: string;
+  specs: {
+    eventType: string;
+    guestCapacity: string;
+    eventLocation: string;
+    duration: string;
+    ourService: string;
+  };
+}
 import Breadcrumbs from '@/components/product-details/Breadcrumbs';
 import ProductDescription from '@/components/product-details/ProductDescription';
 import EventImageGallery from './EventImageGallery';

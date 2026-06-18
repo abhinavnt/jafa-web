@@ -6,9 +6,12 @@ import EventsCategories from './EventsCategories';
 import EventsGallery from './EventsGallery';
 import EventsStats from './EventsStats';
 import EventsProcess from './EventsProcess';
-import { eventsData } from '@/lib/mockData';
 
-export default function EventsClient() {
+interface EventsClientProps {
+  events: any[];
+}
+
+export default function EventsClient({ events }: EventsClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -19,7 +22,7 @@ export default function EventsClient() {
   }, [searchQuery]);
 
   const filteredEvents = useMemo(() => {
-    let filtered = eventsData;
+    let filtered = events;
 
     if (activeCategory !== 'All') {
       filtered = filtered.filter(e => e.category === activeCategory);
