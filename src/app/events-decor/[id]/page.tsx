@@ -46,7 +46,7 @@ export default async function EventDetailsPage({ params }: EventPageProps) {
     title: dbEvent.title,
     category: dbEvent.category,
     image: dbEvent.image,
-    images: [dbEvent.image],
+    images: [dbEvent.image, ...(dbEvent.gallery_images || [])].filter(Boolean),
     description: 'A beautiful event curated perfectly for your special day.',
     aboutEvent: 'Experience the perfection and elegance of this event, tailored specifically to create unforgettable moments.',
     specs: {

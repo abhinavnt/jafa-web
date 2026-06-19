@@ -1,28 +1,28 @@
 'use client';
 import React, { useRef } from 'react';
-import { Droplet, Gift, Heart, Home, Briefcase, Package } from 'lucide-react';
+import { Gift } from 'lucide-react';
+import { IconMap } from '@/lib/icons';
 
-export const giftCategoriesData = [
-  { id: 'perfumes', title: 'Perfumes', subtitle: 'Luxury Scents', icon: Droplet },
-  { id: 'hampers', title: 'Gift Hampers', subtitle: 'Curated Elegance', icon: Gift },
-  { id: 'personalized', title: 'Personalized Gifts', subtitle: 'Made Just For You', icon: Heart },
-  { id: 'decor', title: 'Decor & Lifestyle', subtitle: 'Elegant Living', icon: Home },
-  { id: 'corporate', title: 'Corporate Gifting', subtitle: 'Build Lasting Bonds', icon: Briefcase },
-  { id: 'combo', title: 'Combo Gifts', subtitle: 'Perfect Together', icon: Package },
-];
+export interface GiftCategory {
+  id: string;
+  title: string;
+  subtitle?: string;
+  iconName?: string | null;
+}
 
 interface GiftCategoriesProps {
   activeCategory: string;
   onSelectCategory: (id: string) => void;
+  categories: GiftCategory[];
 }
 
-export default function GiftCategories({ activeCategory, onSelectCategory }: GiftCategoriesProps) {
+export default function GiftCategories({ activeCategory, onSelectCategory, categories }: GiftCategoriesProps) {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
       <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4 lg:gap-6">
-        {giftCategoriesData.map((category) => {
-          const Icon = category.icon;
+        {categories.map((category) => {
           const isActive = activeCategory === category.id;
+          const IconComp = category.iconName && IconMap[category.iconName] ? IconMap[category.iconName] : Gift;
           
           return (
             <button
@@ -34,15 +34,17 @@ export default function GiftCategories({ activeCategory, onSelectCategory }: Gif
                   : 'bg-transparent border-[#DCD0C3] hover:bg-[#F8F2EA] hover:border-[#B89B82]'
               }`}
             >
-              <div className="text-[#8B3A2B] mb-3 md:mb-4">
-                <Icon size={28} strokeWidth={1.5} className="md:w-8 md:h-8 lg:w-10 lg:h-10" />
+              <div className="text-[#8B3A2B] mb-3 md:mb-4 flex items-center justify-center h-8 md:h-10">
+                <IconComp size={28} strokeWidth={1.5} className="md:w-8 md:h-8 lg:w-10 lg:h-10" />
               </div>
               <h3 className={`text-[10px] md:text-[12px] lg:text-[14px] font-bold leading-tight mb-1 ${isActive ? 'text-[#8B3A2B]' : 'text-[#2A1A12]'}`}>
                 {category.title}
               </h3>
-              <p className="text-[#8C7A6B] text-[8px] md:text-[10px] lg:text-[11px] leading-tight hidden md:block">
-                {category.subtitle}
-              </p>
+              {category.subtitle && (
+                <p className="text-[#8C7A6B] text-[8px] md:text-[10px] lg:text-[11px] leading-tight hidden md:block">
+                  {category.subtitle}
+                </p>
+              )}
             </button>
           );
         })}

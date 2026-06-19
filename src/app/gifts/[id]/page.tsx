@@ -50,7 +50,7 @@ export default async function GiftDetailsPage({ params }: GiftPageProps) {
     price: dbProduct.price,
     originalPrice: dbProduct.original_price,
     image: dbProduct.image,
-    images: [dbProduct.image, dbProduct.hover_image].filter(Boolean),
+    images: [dbProduct.image, ...(dbProduct.gallery_images || [])].filter(Boolean),
     description: dbProduct.description || '',
     badge: dbProduct.is_new ? 'NEW' : (dbProduct.original_price ? 'SALE' : undefined),
     status: dbProduct.status,

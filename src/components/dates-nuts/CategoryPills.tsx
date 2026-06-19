@@ -1,13 +1,14 @@
 'use client';
 import React, { useRef } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { IconMap } from '@/lib/icons';
 
 export interface CategoryData {
   id: string;
   title: string;
   subtitle: string;
-  image: string;
+  iconName?: string | null;
 }
 
 interface CategoryPillsProps {
@@ -81,31 +82,28 @@ export default function CategoryPills({ categories, activeCategory, onSelectCate
             </div>
           </button>
 
-          {categories.map((category) => (
-            <button 
-              key={category.id}
-              onClick={(e) => handleCategoryClick(category.id, e)}
-              className={`flex items-center gap-3 lg:gap-4 snap-center shrink-0 transition-all px-3 py-2 md:px-4 md:py-2.5 lg:py-3 rounded-full border ${
-                activeCategory === category.id 
-                  ? 'bg-[#EBE2D5] border-[#B89B82] shadow-sm scale-105' 
-                  : 'bg-transparent border-transparent hover:bg-[#EAE1D6]'
-              }`}
-            >
-              <div className={`relative w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden shrink-0 border transition-colors ${activeCategory === category.id ? 'border-[#B89B82] ring-2 ring-[#F8F2EA]' : 'border-[#DCD0C3]'}`}>
-                <Image 
-                  src={category.image} 
-                  alt={category.title}
-                  fill
-                  sizes="(max-width: 768px) 48px, 80px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="text-left flex flex-col">
-                <span className={`text-[12px] md:text-[15px] lg:text-[18px] font-bold transition-colors ${activeCategory === category.id ? 'text-[#8B3A2B]' : 'text-[#2A1A12]'}`}>{category.title}</span>
-                <span className="text-[9px] md:text-[11px] lg:text-[13px] text-[#5C3D2E]">{category.subtitle}</span>
-              </div>
-            </button>
-          ))}
+          {categories.map((category) => {
+            const IconComp = category.iconName && IconMap[category.iconName] ? IconMap[category.iconName] : Star;
+            return (
+              <button 
+                key={category.id}
+                onClick={(e) => handleCategoryClick(category.id, e)}
+                className={`flex items-center gap-3 lg:gap-4 snap-center shrink-0 transition-all px-3 py-2 md:px-4 md:py-2.5 lg:py-3 rounded-full border ${
+                  activeCategory === category.id 
+                    ? 'bg-[#EBE2D5] border-[#B89B82] shadow-sm scale-105' 
+                    : 'bg-transparent border-transparent hover:bg-[#EAE1D6]'
+                }`}
+              >
+                <div className={`relative w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center shrink-0 border transition-colors ${activeCategory === category.id ? 'border-[#B89B82] ring-2 ring-[#F8F2EA] bg-[#EAE2D8] text-[#8B3A2B]' : 'border-[#DCD0C3] bg-[#F8F2EA] text-[#8C7A6B]'}`}>
+                  <IconComp size={28} className="md:w-8 md:h-8 lg:w-10 lg:h-10" strokeWidth={1.5} />
+                </div>
+                <div className="text-left flex flex-col">
+                  <span className={`text-[12px] md:text-[15px] lg:text-[18px] font-bold transition-colors ${activeCategory === category.id ? 'text-[#8B3A2B]' : 'text-[#2A1A12]'}`}>{category.title}</span>
+                  {category.subtitle && <span className="text-[9px] md:text-[11px] lg:text-[13px] text-[#5C3D2E]">{category.subtitle}</span>}
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         {/* Right Arrow */}

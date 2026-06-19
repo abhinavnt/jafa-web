@@ -5,13 +5,14 @@ import ProductCard, { ShopProduct } from './ProductCard';
 
 interface ProductGridProps {
   products: ShopProduct[];
+  basePath?: string;
 }
 
 const ITEMS_PER_PAGE = 18;
 
 type SortOption = 'popular' | 'price-low' | 'price-high' | 'rating';
 
-export default function ProductGrid({ products }: ProductGridProps) {
+export default function ProductGrid({ products, basePath }: ProductGridProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortOption>('popular');
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -102,7 +103,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
       {currentProducts.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 md:gap-6">
           {currentProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} basePath={basePath} />
           ))}
         </div>
       ) : (

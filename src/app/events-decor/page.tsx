@@ -23,13 +23,25 @@ export default async function EventsDecorPage() {
     image: e.image,
   }));
 
+  const { data: dbCategories } = await supabase
+    .from('product_categories')
+    .select('*')
+    .eq('section', 'events')
+    .order('title', { ascending: true });
+
+  const categories = (dbCategories || []).map(c => ({
+    id: c.title,
+    title: c.title,
+    iconName: c.icon || null
+  }));
+
   return (
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
       <div className="bg-[#EAE2D8]">
         <Navbar />
       </div>
       <div className="flex-grow">
-        <EventsClient events={events} />
+        <EventsClient events={events} categories={categories} />
       </div>
       <Footer />
     </main>

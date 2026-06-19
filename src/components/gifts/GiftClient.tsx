@@ -8,10 +8,11 @@ import ProductGrid from '../dates-nuts/ProductGrid';
 import { ShopProduct } from '../dates-nuts/ProductCard';
 
 interface GiftClientProps {
-  products: ShopProduct[];
+  gifts: any[];
+  categories: any[];
 }
 
-export default function GiftClient({ products }: GiftClientProps) {
+export default function GiftClient({ gifts, categories }: GiftClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -24,33 +25,22 @@ export default function GiftClient({ products }: GiftClientProps) {
 
   // Filter products based on category and search
   const filteredProducts = useMemo(() => {
-    let filtered = products;
+    let filtered = gifts;
 
     if (activeCategory !== 'All') {
-      const categoryMapping: Record<string, string> = {
-        'perfumes': 'Perfumes',
-        'hampers': 'Gift Hampers',
-        'personalized': 'Personalized Gifts',
-        'decor': 'Decor & Lifestyle',
-        'corporate': 'Corporate Gifting',
-        'combo': 'Combo Gifts'
-      };
-      const catName = categoryMapping[activeCategory];
-      if (catName) {
-        filtered = filtered.filter(p => p.category === catName);
-      }
+      filtered = filtered.filter(g => g.category === activeCategory);
     }
 
     if (debouncedSearch) {
       const lowerSearch = debouncedSearch.toLowerCase();
-      filtered = filtered.filter(p => 
-        p.title.toLowerCase().includes(lowerSearch) || 
-        p.category.toLowerCase().includes(lowerSearch)
+      filtered = filtered.filter(g => 
+        g.title.toLowerCase().includes(lowerSearch) || 
+        g.category.toLowerCase().includes(lowerSearch)
       );
     }
 
     return filtered;
-  }, [activeCategory, debouncedSearch]);
+  }, [gifts, activeCategory, debouncedSearch]);
 
   const hasSearchFilter = debouncedSearch.length > 0;
 
@@ -77,10 +67,11 @@ export default function GiftClient({ products }: GiftClientProps) {
         <GiftCategories 
           activeCategory={activeCategory} 
           onSelectCategory={setActiveCategory} 
+          categories={categories}
         />
       )}
 
-      <ProductGrid products={filteredProducts} />
+      <ProductGrid products={filteredProducts} basePath="/gifts" />
       
       <GiftFeatures />
     </>

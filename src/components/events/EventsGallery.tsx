@@ -58,8 +58,8 @@ export default function EventsGallery({ events }: EventsGalleryProps) {
               />
               
               {/* Bottom White Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/40 to-transparent flex items-end">
-                <div className="bg-[#F8F2EA] py-3 px-5 md:py-4 md:px-6 rounded-lg w-[85%] md:w-[75%] lg:w-[65%] flex items-center justify-between">
+              <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 bg-gradient-to-t from-black/40 to-transparent flex items-end">
+                <div className="bg-[#F8F2EA] py-2 px-4 md:py-2.5 md:px-5 rounded-lg w-[70%] md:w-[55%] lg:w-[45%] flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-[#2A1A12] text-[10px] md:text-[11px] font-bold tracking-widest uppercase mb-1">
                       {event.category}

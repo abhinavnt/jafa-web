@@ -39,23 +39,38 @@ export default async function DatesAndNutsPage() {
     .eq('is_exclusive', true)
     .limit(8);
 
-  const exclusiveOffers = (exclusiveOffersData || []).map(p => ({
-    id: p.id,
-    title: p.title,
-    description: p.description || '',
-    price: p.price,
-    originalPrice: p.original_price,
-    image: p.image,
-    badge: 'SALE',
-    rating: 4.8,
-    reviews: 120,
-    category: p.category,
+  const exclusiveOffers = (exclusiveOffersData || []).map(o => ({
+    id: o.id,
+    title: o.title,
+    price: o.price,
+    originalPrice: o.original_price,
+    image: o.image,
+    category: o.category,
+    description: o.description || '',
+    badge: o.is_new ? 'NEW' : (o.original_price ? 'SALE' : undefined),
+  }));
+
+  const { data: dbCategories } = await supabase
+    .from('product_categories')
+    .select('*')
+    .eq('section', 'dates_nuts')
+    .order('title', { ascending: true });
+
+  const categories = (dbCategories || []).map(c => ({
+    id: c.title,
+    title: c.title,
+    subtitle: '',
+    iconName: c.icon || null
   }));
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between bg-[#F8F2EA]">
-      <Navbar />
-      <ShopClient products={shopProducts} exclusiveOffers={exclusiveOffers} />
+    <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
+      <div className="bg-[#EAE2D8]">
+        <Navbar />
+      </div>
+      <div className="flex-grow">
+        <ShopClient products={shopProducts} exclusiveOffers={exclusiveOffers} categories={categories} />
+      </div>
       <Footer />
     </main>
   );

@@ -9,17 +9,10 @@ import ExclusiveOffers from '../homepage/ExclusiveOffers';
 interface ShopClientProps {
   products: ShopProduct[];
   exclusiveOffers: any[];
+  categories: CategoryData[];
 }
 
-const shopCategories: CategoryData[] = [
-  { id: 'Dates', title: 'Dates', subtitle: 'Handpicked varieties', image: 'https://images.unsplash.com/photo-1596431945112-2358897c8d9e?w=200&q=80' },
-  { id: 'Nuts', title: 'Nuts', subtitle: 'Crunchy & wholesome', image: 'https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=200&q=80' },
-  { id: 'Dry Fruits', title: 'Dry Fruits', subtitle: 'Naturally delicious', image: 'https://images.unsplash.com/photo-1599577180575-802521151e3a?w=200&q=80' },
-  { id: 'Seeds & Berries', title: 'Seeds & Berries', subtitle: 'Tiny bites of goodness', image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=200&q=80' },
-  { id: 'Combos', title: 'Combos', subtitle: 'Perfectly curated', image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=200&q=80' },
-];
-
-export default function ShopClient({ products, exclusiveOffers }: ShopClientProps) {
+export default function ShopClient({ products, exclusiveOffers, categories }: ShopClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -34,13 +27,13 @@ export default function ShopClient({ products, exclusiveOffers }: ShopClientProp
 
   // Filter categories
   const filteredCategories = useMemo(() => {
-    if (!searchQuery) return shopCategories;
+    if (!searchQuery) return categories;
     const searchLower = searchQuery.toLowerCase();
-    return shopCategories.filter(cat => 
+    return categories.filter(cat => 
       cat.title.toLowerCase().includes(searchLower) ||
-      cat.subtitle.toLowerCase().includes(searchLower)
+      cat.subtitle?.toLowerCase().includes(searchLower)
     );
-  }, [searchQuery]);
+  }, [searchQuery, categories]);
 
   // Filter products
   const filteredProducts = useMemo(() => {

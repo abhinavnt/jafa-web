@@ -9,9 +9,10 @@ import EventsProcess from './EventsProcess';
 
 interface EventsClientProps {
   events: any[];
+  categories: any[];
 }
 
-export default function EventsClient({ events }: EventsClientProps) {
+export default function EventsClient({ events, categories }: EventsClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -70,6 +71,7 @@ export default function EventsClient({ events }: EventsClientProps) {
         <EventsCategories 
           activeCategory={activeCategory} 
           onSelectCategory={handleCategorySelect} 
+          categories={categories}
         />
       )}
 

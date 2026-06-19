@@ -21,11 +21,12 @@ export interface ShopProduct {
 
 interface ProductCardProps {
   product: ShopProduct;
+  basePath?: string;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
-  const isGift = product.id.startsWith('gift-');
-  const basePath = isGift ? '/gifts' : '/dates-nuts';
+export default function ProductCard({ product, basePath = '/dates-nuts' }: ProductCardProps) {
+  // If explicitly passed (e.g., from gifts page), use it.
+  // Otherwise default to dates-nuts.
 
   return (
     <Link href={`${basePath}/${product.id}`} className="bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square">

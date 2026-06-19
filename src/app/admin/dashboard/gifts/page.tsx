@@ -2,7 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
-import { Plus, Trash2, Edit, X, Image as ImageIcon, Gift, FolderPlus } from 'lucide-react';
+import { Plus, Trash2, Edit, X, Gift, FolderPlus } from 'lucide-react';
+import { deleteCloudinaryImage } from '@/app/actions/cloudinary';
+import { IconMap, availableIcons } from '@/lib/icons';
 
 export default function GiftsAdmin() {
   const [products, setProducts] = useState<any[]>([]);
@@ -12,19 +14,25 @@ export default function GiftsAdmin() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const ITEMS_PER_PAGE = 10;
+
   // Form State
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     category: '',
+    description: '',
     price: '',
     original_price: '',
     image: '',
+    gallery_images: [] as string[],
     status: 'In Stock',
     is_exclusive: false,
   });
 
-  const [categoryFormData, setCategoryFormData] = useState({ id: '', title: '' });
+  const [categoryFormData, setCategoryFormData] = useState({ id: '', title: '', icon: '' });
   
   const supabase = createClient();
 
@@ -40,33 +48,82 @@ export default function GiftsAdmin() {
       
     if (catData) setCategories(catData);
 
-    // Fetch Products
-    const { data, error } = await supabase
+    // Fetch Products with Pagination
+    const { data, count, error } = await supabase
       .from('products')
-      .select('*')
+      .select('*', { count: 'exact' })
       .eq('type', 'gifts')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE - 1);
       
     if (data) setProducts(data);
+    if (count !== null) setTotalCount(count);
     setLoading(false);
   };
 
   useEffect(() => {
     fetchProductsAndCategories();
-  }, []);
+  }, [page]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    const currentTotal = (formData.image ? 1 : 0) + formData.gallery_images.length;
+    if (currentTotal + files.length > 5) {
+      alert('You can only upload a maximum of 5 images per product.');
+      return;
+    }
 
     setUploadingImage(true);
     try {
-      const url = await uploadImageToCloudinary(file);
-      setFormData(prev => ({ ...prev, image: url }));
+      const uploadedUrls: string[] = [];
+      for (const file of files) {
+        const url = await uploadImageToCloudinary(file);
+        uploadedUrls.push(url);
+      }
+      
+      setFormData(prev => {
+        let newImage = prev.image;
+        let newGallery = [...prev.gallery_images];
+        
+        uploadedUrls.forEach(url => {
+          if (!newImage) {
+            newImage = url;
+          } else {
+            newGallery.push(url);
+          }
+        });
+        
+        return { ...prev, image: newImage, gallery_images: newGallery };
+      });
     } catch (error: any) {
       alert("Image upload failed: " + error.message);
     } finally {
       setUploadingImage(false);
+    }
+  };
+
+  const removeImage = async (index: number) => {
+    let urlToDelete = '';
+
+    setFormData(prev => {
+      if (index === -1) {
+        urlToDelete = prev.image;
+        if (prev.gallery_images.length > 0) {
+          return { ...prev, image: prev.gallery_images[0], gallery_images: prev.gallery_images.slice(1) };
+        }
+        return { ...prev, image: '' };
+      } else {
+        urlToDelete = prev.gallery_images[index];
+        const newGallery = [...prev.gallery_images];
+        newGallery.splice(index, 1);
+        return { ...prev, gallery_images: newGallery };
+      }
+    });
+
+    if (urlToDelete) {
+      await deleteCloudinaryImage(urlToDelete);
     }
   };
 
@@ -99,20 +156,20 @@ export default function GiftsAdmin() {
     e.preventDefault();
     if (categoryFormData.id) {
       // Edit
-      const { error } = await supabase.from('product_categories').update({ title: categoryFormData.title }).eq('id', categoryFormData.id);
+      const { error } = await supabase.from('product_categories').update({ title: categoryFormData.title, icon: categoryFormData.icon }).eq('id', categoryFormData.id);
       if (!error) {
         setIsCategoryModalOpen(false);
-        setCategoryFormData({ id: '', title: '' });
+        setCategoryFormData({ id: '', title: '', icon: '' });
         fetchProductsAndCategories();
       } else {
         alert('Error updating category: ' + error.message);
       }
     } else {
       // Add
-      const { error } = await supabase.from('product_categories').insert([{ title: categoryFormData.title, section: 'gifts' }]);
+      const { error } = await supabase.from('product_categories').insert([{ title: categoryFormData.title, icon: categoryFormData.icon, section: 'gifts' }]);
       if (!error) {
         setIsCategoryModalOpen(false);
-        setCategoryFormData({ id: '', title: '' });
+        setCategoryFormData({ id: '', title: '', icon: '' });
         fetchProductsAndCategories();
       } else {
         alert('Error adding category: ' + error.message);
@@ -127,19 +184,30 @@ export default function GiftsAdmin() {
   };
 
   const openCategoryEditModal = (category: any) => {
-    setCategoryFormData({ id: category.id, title: category.title });
+    setCategoryFormData({ id: category.id, title: category.title, icon: category.icon || '' });
     setIsCategoryModalOpen(true);
   };
 
   const openCategoryAddModal = () => {
-    setCategoryFormData({ id: '', title: '' });
+    setCategoryFormData({ id: '', title: '', icon: '' });
     setIsCategoryModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this gift product?')) return;
-    await supabase.from('products').delete().eq('id', id);
-    fetchProductsAndCategories();
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    
+    const productToDelete = products.find(p => p.id === id);
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    
+    if (!error && productToDelete) {
+      if (productToDelete.image) await deleteCloudinaryImage(productToDelete.image);
+      if (productToDelete.gallery_images) {
+        for (const img of productToDelete.gallery_images) {
+          await deleteCloudinaryImage(img);
+        }
+      }
+      fetchProductsAndCategories();
+    }
   };
 
   const openEditModal = (product: any) => {
@@ -147,9 +215,11 @@ export default function GiftsAdmin() {
     setFormData({
       title: product.title || '',
       category: product.category || '',
+      description: product.description || '',
       price: product.price ? product.price.toString() : '',
       original_price: product.original_price ? product.original_price.toString() : '',
       image: product.image || '',
+      gallery_images: product.gallery_images || [],
       status: product.status || 'In Stock',
       is_exclusive: product.is_exclusive || false,
     });
@@ -158,7 +228,7 @@ export default function GiftsAdmin() {
 
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ title: '', category: '', price: '', original_price: '', image: '', status: 'In Stock', is_exclusive: false });
+    setFormData({ title: '', category: '', description: '', price: '', original_price: '', image: '', gallery_images: [], status: 'In Stock', is_exclusive: false });
     setIsModalOpen(true);
   };
 
@@ -247,6 +317,31 @@ export default function GiftsAdmin() {
             </tbody>
           </table>
         </div>
+        
+        {/* Pagination Controls */}
+        {totalCount > ITEMS_PER_PAGE && (
+          <div className="px-6 py-4 border-t border-[#DCD0C3] bg-[#F8F2EA] flex items-center justify-between">
+            <span className="text-sm text-[#5C3D2E]">
+              Showing <span className="font-bold">{(page - 1) * ITEMS_PER_PAGE + 1}</span> to <span className="font-bold">{Math.min(page * ITEMS_PER_PAGE, totalCount)}</span> of <span className="font-bold">{totalCount}</span> products
+            </span>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="px-3 py-1 border border-[#DCD0C3] bg-white text-[#5C3D2E] text-sm rounded hover:bg-[#F8F2EA] disabled:opacity-50 transition-colors"
+              >
+                Previous
+              </button>
+              <button 
+                onClick={() => setPage(p => p + 1)}
+                disabled={page * ITEMS_PER_PAGE >= totalCount}
+                className="px-3 py-1 border border-[#DCD0C3] bg-white text-[#5C3D2E] text-sm rounded hover:bg-[#F8F2EA] disabled:opacity-50 transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-12">
@@ -295,39 +390,56 @@ export default function GiftsAdmin() {
               <form id="productForm" onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
                 
                 <div className="col-span-2">
-                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Gift Image *</label>
-                  <div className="flex items-center gap-4">
-                    {formData.image ? (
-                      <div className="relative w-24 h-24 rounded border border-[#DCD0C3] overflow-hidden">
-                        <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
-                        <button type="button" onClick={() => setFormData({...formData, image: ''})} className="absolute top-1 right-1 bg-white rounded-full p-1 shadow hover:text-red-600">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Product Images (Max 5) *</label>
+                  <div className="flex flex-wrap items-end gap-4">
+                    {/* Main Image */}
+                    {formData.image && (
+                      <div className="relative w-24 h-24 rounded border-2 border-[#8B3A2B] overflow-hidden">
+                        <div className="absolute top-0 left-0 bg-[#8B3A2B] text-white text-[10px] px-2 py-0.5 font-bold z-10">COVER</div>
+                        <img src={formData.image} alt="Cover" className="w-full h-full object-cover" />
+                        <button type="button" onClick={() => removeImage(-1)} className="absolute top-1 right-1 bg-white rounded-full p-1 shadow hover:text-red-600 z-10">
                           <X size={12} />
                         </button>
                       </div>
-                    ) : (
-                      <div className="w-24 h-24 rounded border-2 border-dashed border-[#DCD0C3] flex items-center justify-center bg-[#F8F2EA] text-[#8C7A6B]">
-                        <ImageIcon size={24} />
+                    )}
+                    {/* Gallery Images */}
+                    {formData.gallery_images.map((img, idx) => (
+                      <div key={idx} className="relative w-20 h-20 rounded border border-[#DCD0C3] overflow-hidden">
+                        <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
+                        <button type="button" onClick={() => removeImage(idx)} className="absolute top-1 right-1 bg-white rounded-full p-1 shadow hover:text-red-600 z-10">
+                          <X size={10} />
+                        </button>
+                      </div>
+                    ))}
+                    
+                    {/* Uploader */}
+                    {(formData.image ? 1 : 0) + formData.gallery_images.length < 5 && (
+                      <div className="flex flex-col items-start gap-2">
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          multiple
+                          onChange={handleImageUpload} 
+                          className="hidden" 
+                          id="imageUpload"
+                        />
+                        <label htmlFor="imageUpload" className={`w-20 h-20 rounded border-2 border-dashed border-[#DCD0C3] flex items-center justify-center bg-[#F8F2EA] text-[#8C7A6B] cursor-pointer hover:bg-[#EAE0D5] transition-colors ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
+                          <Plus size={24} />
+                        </label>
                       </div>
                     )}
-                    <div className="flex-1">
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleImageUpload} 
-                        className="hidden" 
-                        id="imageUpload"
-                      />
-                      <label htmlFor="imageUpload" className={`inline-block border border-[#DCD0C3] px-4 py-2 rounded text-sm cursor-pointer hover:bg-gray-50 transition-colors ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
-                        {uploadingImage ? 'Uploading to Cloudinary...' : 'Upload Image'}
-                      </label>
-                      <p className="text-xs text-[#8C7A6B] mt-2">Uploads directly to Cloudinary and saves URL.</p>
-                    </div>
                   </div>
+                  {uploadingImage && <p className="text-xs text-[#8B3A2B] mt-2 font-bold animate-pulse">Uploading images, please wait...</p>}
                 </div>
 
-                <div className="col-span-2 sm:col-span-1">
-                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Gift Title *</label>
+                <div className="col-span-2">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Gift Box Title *</label>
                   <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required />
+                </div>
+
+                <div className="col-span-2">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Description (Optional)</label>
+                  <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" placeholder="Describe the product details..." />
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
@@ -396,7 +508,26 @@ export default function GiftsAdmin() {
             <div className="p-6">
               <form id="categoryForm" onSubmit={handleCategorySubmit}>
                 <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Category Title *</label>
-                <input type="text" value={categoryFormData.title} onChange={e => setCategoryFormData({...categoryFormData, title: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required placeholder="e.g. Perfumes" />
+                <input type="text" value={categoryFormData.title} onChange={e => setCategoryFormData({...categoryFormData, title: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B] mb-4" required placeholder="e.g. Gift Hampers" />
+
+                <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Select Icon</label>
+                <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto p-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded">
+                  {availableIcons.map(iconName => {
+                    const IconComp = IconMap[iconName];
+                    const isSelected = categoryFormData.icon === iconName;
+                    return (
+                      <button 
+                        key={iconName}
+                        type="button"
+                        onClick={() => setCategoryFormData({...categoryFormData, icon: iconName})}
+                        className={`flex items-center justify-center p-2 rounded transition-colors ${isSelected ? 'bg-[#8B3A2B] text-white' : 'bg-white text-[#8C7A6B] hover:bg-[#EBE2D5] border border-[#DCD0C3]'}`}
+                        title={iconName}
+                      >
+                        <IconComp size={20} />
+                      </button>
+                    );
+                  })}
+                </div>
               </form>
             </div>
             <div className="px-6 py-4 border-t border-[#DCD0C3] bg-[#F8F2EA] flex justify-end gap-3">
