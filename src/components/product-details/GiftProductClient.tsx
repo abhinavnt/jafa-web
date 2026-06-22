@@ -13,9 +13,8 @@ interface GiftProductClientProps {
 }
 
 export default function GiftProductClient({ product }: GiftProductClientProps) {
-  const [activeSizeIndex, setActiveSizeIndex] = useState(
-    product.sizes ? Math.max(0, product.sizes.findIndex(s => s.popular)) : 0
-  );
+  const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
+  const [activeVariantIndex, setActiveVariantIndex] = useState(0);
 
   const breadcrumbs = [
     { label: 'Home', href: '/' },
@@ -25,14 +24,16 @@ export default function GiftProductClient({ product }: GiftProductClientProps) {
   ];
 
   const handleWhatsApp = () => {
-    const selectedSize = product.sizes?.[activeSizeIndex];
+    const selectedVariant = hasVariants ? product.variants![activeVariantIndex] : null;
     let message = `Hi Jafa! I'm interested in the ${product.title}.`;
-    if (selectedSize) {
-      message = `Hi Jafa! I'm interested in the ${product.title} (${selectedSize.label} - ${selectedSize.weight}).`;
+    if (selectedVariant) {
+      message = `Hi Jafa! I'm interested in the ${product.title} (${selectedVariant.name}).`;
     }
     const url = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
+
+  const displayPrice = hasVariants ? product.variants![activeVariantIndex].price : product.price;
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-10">
@@ -64,15 +65,25 @@ export default function GiftProductClient({ product }: GiftProductClientProps) {
             shortDescription={product.description?.split('\n')[0] || ''} 
           />
           
-          {product.sizes && product.sizes.length > 0 && (
+          <div className="mb-6">
+            <div className="flex items-end gap-3 md:gap-4 mb-2">
+              <span className="text-[#8B3A2B] text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-none">
+                ₹{(displayPrice || 0).toLocaleString('en-IN')}
+              </span>
+              {product.originalPrice && !hasVariants && (
+                <span className="text-[#8C7A6B] text-[16px] md:text-[18px] line-through decoration-[#8C7A6B]/50 leading-none mb-1">
+                  ₹{product.originalPrice.toLocaleString('en-IN')}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {hasVariants && (
             <div className="mb-8">
-              <h3 className="text-[#2A1A12] text-[12px] md:text-[13px] font-bold tracking-wider uppercase mb-4">
-                SELECT SIZE
-              </h3>
               <SizeSelector 
-                sizes={product.sizes} 
-                activeSizeIndex={activeSizeIndex} 
-                onSelectSize={setActiveSizeIndex} 
+                variants={product.variants!} 
+                activeVariantIndex={activeVariantIndex} 
+                onSelectVariant={setActiveVariantIndex} 
               />
             </div>
           )}

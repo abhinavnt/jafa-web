@@ -30,6 +30,7 @@ export default async function GiftsPage() {
     status: p.status,
     rating: 4.8,
     reviews: 120,
+    variants: Array.isArray(p.variants) ? p.variants : [],
   }));
 
   const { data: dbCategories } = await supabase

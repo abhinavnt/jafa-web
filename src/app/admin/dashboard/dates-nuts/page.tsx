@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
-import { Plus, Trash2, Edit, X, Nut, FolderPlus } from 'lucide-react';
+import { Plus, Trash2, Edit, X, Nut, FolderPlus, Image as ImageIcon } from 'lucide-react';
 import { deleteCloudinaryImage } from '@/app/actions/cloudinary';
 import { IconMap, availableIcons } from '@/lib/icons';
 
@@ -30,6 +30,7 @@ export default function DatesNutsAdmin() {
     gallery_images: [] as string[],
     status: 'In Stock',
     is_exclusive: false,
+    variants: [] as { name: string, price: string }[],
   });
 
   const [categoryFormData, setCategoryFormData] = useState({ id: '', title: '', icon: '' });
@@ -138,6 +139,7 @@ export default function DatesNutsAdmin() {
       ...formData,
       price: formData.price ? parseFloat(formData.price) : null,
       original_price: formData.original_price ? parseFloat(formData.original_price) : null,
+      variants: formData.variants.map(v => ({ name: v.name, price: parseFloat(v.price) || 0 })),
       type: 'dates_nuts'
     };
 
@@ -222,13 +224,16 @@ export default function DatesNutsAdmin() {
       gallery_images: product.gallery_images || [],
       status: product.status || 'In Stock',
       is_exclusive: product.is_exclusive || false,
+      variants: Array.isArray(product.variants) 
+        ? product.variants.map((v: any) => ({ name: v.name, price: v.price.toString() })) 
+        : [],
     });
     setIsModalOpen(true);
   };
 
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ title: '', category: '', description: '', price: '', original_price: '', image: '', gallery_images: [], status: 'In Stock', is_exclusive: false });
+    setFormData({ title: '', category: '', description: '', price: '', original_price: '', image: '', gallery_images: [], status: 'In Stock', is_exclusive: false, variants: [] });
     setIsModalOpen(true);
   };
 
@@ -442,6 +447,64 @@ export default function DatesNutsAdmin() {
                   <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" placeholder="Describe the product details..." />
                 </div>
 
+                <div className="col-span-2 border border-[#DCD0C3] p-4 rounded bg-[#F8F2EA]/50">
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider">Product Variants (Sizes/Weights)</label>
+                    <button 
+                      type="button" 
+                      onClick={() => setFormData({...formData, variants: [...formData.variants, { name: '', price: '' }]})}
+                      className="text-[#8B3A2B] text-xs font-bold flex items-center gap-1 hover:underline"
+                    >
+                      <Plus size={14} /> Add Variant
+                    </button>
+                  </div>
+                  {formData.variants.length > 0 ? (
+                    <div className="space-y-3">
+                      {formData.variants.map((v, i) => (
+                        <div key={i} className="flex gap-3 items-start">
+                          <input 
+                            type="text" 
+                            placeholder="Variant Name (e.g. 500g)" 
+                            value={v.name}
+                            onChange={(e) => {
+                              const newV = [...formData.variants];
+                              newV[i].name = e.target.value;
+                              setFormData({...formData, variants: newV});
+                            }}
+                            className="flex-1 px-3 py-2 bg-white border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B] text-sm"
+                            required
+                          />
+                          <input 
+                            type="number" 
+                            placeholder="Price (₹)" 
+                            value={v.price}
+                            onChange={(e) => {
+                              const newV = [...formData.variants];
+                              newV[i].price = e.target.value;
+                              setFormData({...formData, variants: newV});
+                            }}
+                            className="w-32 px-3 py-2 bg-white border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B] text-sm"
+                            required
+                          />
+                          <button 
+                            type="button" 
+                            onClick={() => {
+                              const newV = [...formData.variants];
+                              newV.splice(i, 1);
+                              setFormData({...formData, variants: newV});
+                            }}
+                            className="p-2 text-red-500 hover:bg-red-50 rounded"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[#8C7A6B]">No variants added. Product will use the base price below.</p>
+                  )}
+                </div>
+
                 <div className="col-span-2 sm:col-span-1">
                   <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Category *</label>
                   <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required>
@@ -452,15 +515,19 @@ export default function DatesNutsAdmin() {
                   </select>
                 </div>
 
-                <div className="col-span-2 sm:col-span-1">
-                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Current Price</label>
-                  <input type="number" step="0.01" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
-                </div>
+                {formData.variants.length === 0 && (
+                  <>
+                    <div className="col-span-2 sm:col-span-1">
+                      <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Base Price (₹) *</label>
+                      <input type="number" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required />
+                    </div>
 
-                <div className="col-span-2 sm:col-span-1">
-                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Original Price</label>
-                  <input type="number" step="0.01" value={formData.original_price} onChange={e => setFormData({...formData, original_price: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
-                </div>
+                    <div className="col-span-2 sm:col-span-1">
+                      <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Original Price</label>
+                      <input type="number" step="0.01" value={formData.original_price} onChange={e => setFormData({...formData, original_price: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
+                    </div>
+                  </>
+                )}
 
                 <div className="col-span-2 sm:col-span-1">
                   <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Status</label>

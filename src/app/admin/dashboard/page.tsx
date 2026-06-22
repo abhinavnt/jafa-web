@@ -49,9 +49,9 @@ export default function AdminDashboard() {
           price: product.price || null,
           original_price: product.originalPrice || null,
           image: product.image,
-          hover_image: product.hoverImage || null,
-          is_new: product.isNew || false,
-          status: product.status || 'In Stock',
+          hover_image: (product as any).hoverImage || null,
+          is_new: (product as any).isNew || false,
+          status: (product as any).status || 'In Stock',
           type: product.type
         });
         

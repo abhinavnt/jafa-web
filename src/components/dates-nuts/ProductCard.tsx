@@ -17,6 +17,7 @@ export interface ShopProduct {
   description?: string;
   soldCount?: string;
   sizes?: { label: string; weight: string; price: number; popular?: boolean }[];
+  variants?: { name: string; price: number }[];
 }
 
 interface ProductCardProps {
@@ -25,8 +26,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, basePath = '/dates-nuts' }: ProductCardProps) {
-  // If explicitly passed (e.g., from gifts page), use it.
-  // Otherwise default to dates-nuts.
+  const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
+  const displayPrice = hasVariants ? Math.min(...product.variants!.map(v => v.price)) : product.price;
 
   return (
     <Link href={`${basePath}/${product.id}`} className="bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square">
@@ -59,9 +60,9 @@ export default function ProductCard({ product, basePath = '/dates-nuts' }: Produ
         
         <div className="flex flex-wrap items-center gap-1.5 mb-auto">
           <span className="font-bold text-[#8B3A2B] text-[11px] md:text-[13px]">
-            ₹{product.price.toLocaleString('en-IN')}
+            {hasVariants ? 'From ' : ''}₹{(displayPrice || 0).toLocaleString('en-IN')}
           </span>
-          {product.originalPrice && (
+          {product.originalPrice && !hasVariants && (
             <span className="text-[9px] md:text-[10px] text-[#8C7A6B] line-through font-medium">
               ₹{product.originalPrice.toLocaleString('en-IN')}
             </span>

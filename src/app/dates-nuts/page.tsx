@@ -30,6 +30,7 @@ export default async function DatesAndNutsPage() {
     status: p.status,
     rating: 4.8,
     reviews: 120,
+    variants: Array.isArray(p.variants) ? p.variants : [],
   }));
 
   const { data: exclusiveOffersData } = await supabase
@@ -48,6 +49,7 @@ export default async function DatesAndNutsPage() {
     category: o.category,
     description: o.description || '',
     badge: o.is_new ? 'NEW' : (o.original_price ? 'SALE' : undefined),
+    variants: Array.isArray(o.variants) ? o.variants : [],
   }));
 
   const { data: dbCategories } = await supabase

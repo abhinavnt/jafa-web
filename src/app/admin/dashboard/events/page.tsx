@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
-import { Plus, Trash2, Edit, X, CalendarHeart, FolderPlus } from 'lucide-react';
+import { Plus, Trash2, Edit, X, CalendarHeart, FolderPlus, Image as ImageIcon } from 'lucide-react';
 import { deleteCloudinaryImage } from '@/app/actions/cloudinary';
 import { IconMap, availableIcons } from '@/lib/icons';
 

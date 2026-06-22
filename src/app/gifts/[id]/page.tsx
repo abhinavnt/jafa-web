@@ -56,6 +56,7 @@ export default async function GiftDetailsPage({ params }: GiftPageProps) {
     status: dbProduct.status,
     rating: 4.8,
     reviews: 120,
+    variants: Array.isArray(dbProduct.variants) ? dbProduct.variants : [],
   };
 
   return (
