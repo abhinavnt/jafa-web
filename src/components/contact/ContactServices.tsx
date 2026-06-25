@@ -2,11 +2,12 @@
 import React from 'react';
 import Image from 'next/image';
 import { Award, Gift, Building2, ArrowRight } from 'lucide-react';
+import { getWhatsAppLink } from '@/lib/whatsapp';
 
 export default function ContactServices() {
   const handleEnquire = (subject: string) => {
     const message = `Hi Jafa! I'm interested in learning more about your ${subject}.`;
-    window.open(`https://wa.me/1234567890?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(getWhatsAppLink(message), '_blank');
   };
 
   const services = [

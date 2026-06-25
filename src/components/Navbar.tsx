@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Menu } from 'lucide-react';
+import { getWhatsAppLink } from '@/lib/whatsapp';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -60,7 +61,7 @@ export default function Navbar() {
 
         {/* WhatsApp Button (Desktop) */}
         <a
-          href="https://wa.me/1234567890"
+          href={getWhatsAppLink()}
           target="_blank"
           rel="noreferrer"
           className="hidden lg:flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-full text-xs font-bold tracking-wider hover:bg-opacity-90 transition-all"
@@ -94,7 +95,7 @@ export default function Navbar() {
               </Link>
             ))}
             <a
-              href="https://wa.me/1234567890"
+              href={getWhatsAppLink()}
               target="_blank"
               rel="noreferrer"
               className="mt-8 flex items-center gap-2 bg-foreground text-background px-8 py-4 rounded-full text-sm font-bold tracking-wider"

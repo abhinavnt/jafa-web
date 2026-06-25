@@ -2,10 +2,11 @@
 import React from 'react';
 import Image from 'next/image';
 import { MessageCircle } from 'lucide-react';
+import { getWhatsAppLink } from '@/lib/whatsapp';
 
 export default function ContactHero() {
   const handleWhatsApp = () => {
-    window.open('https://wa.me/1234567890', '_blank');
+    window.open(getWhatsAppLink(), '_blank');
   };
 
   return (

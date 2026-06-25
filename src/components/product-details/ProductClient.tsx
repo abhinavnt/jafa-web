@@ -7,6 +7,7 @@ import ImageGallery from './ImageGallery';
 import ProductInfo from './ProductInfo';
 import SizeSelector from './SizeSelector';
 import ProductDescription from './ProductDescription';
+import { getWhatsAppLink } from '@/lib/whatsapp';
 
 interface ProductClientProps {
   product: ShopProduct;
@@ -25,9 +26,8 @@ export default function ProductClient({ product }: ProductClientProps) {
 
   const handleWhatsApp = () => {
     const selectedVariant = hasVariants ? product.variants![activeVariantIndex] : null;
-    const message = `Hi, I am interested in ${product.title}${selectedVariant ? ` (${selectedVariant.name})` : ''}.`;
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const message = `Hi, I am interested in ${product.title}${selectedVariant ? ` (${selectedVariant.name})` : ''}.\n\nProduct Link: ${window.location.href}`;
+    window.open(getWhatsAppLink(message), '_blank');
   };
 
   const displayPrice = hasVariants ? product.variants![activeVariantIndex].price : product.price;

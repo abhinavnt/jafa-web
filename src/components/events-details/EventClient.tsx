@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
+import { getWhatsAppLink } from '@/lib/whatsapp';
+
 export interface EventItem {
   id: string;
   title: string;
@@ -36,9 +38,8 @@ export default function EventClient({ event }: EventClientProps) {
   ];
 
   const handleWhatsApp = () => {
-    const message = `Hi Jafa! I'm interested in the ${event.title} (${event.category}). Could you provide more details?`;
-    const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const message = `Hi Jafa! I'm interested in the ${event.title} event decor service.\n\nEvent Link: ${window.location.href}`;
+    window.open(getWhatsAppLink(message), '_blank');
   };
 
   return (

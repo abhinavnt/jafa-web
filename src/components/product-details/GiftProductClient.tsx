@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { MessageCircle } from 'lucide-react';
+import { getWhatsAppLink } from '@/lib/whatsapp';
 import Breadcrumbs from './Breadcrumbs';
 import ImageGallery from './ImageGallery';
 import GiftProductInfo from './GiftProductInfo';
@@ -29,8 +30,8 @@ export default function GiftProductClient({ product }: GiftProductClientProps) {
     if (selectedVariant) {
       message = `Hi Jafa! I'm interested in the ${product.title} (${selectedVariant.name}).`;
     }
-    const url = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    message += `\n\nProduct Link: ${window.location.href}`;
+    window.open(getWhatsAppLink(message), '_blank');
   };
 
   const displayPrice = hasVariants ? product.variants![activeVariantIndex].price : product.price;
