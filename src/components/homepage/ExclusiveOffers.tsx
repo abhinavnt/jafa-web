@@ -61,7 +61,11 @@ export default function ExclusiveOffers({ products }: ExclusiveOffersProps) {
             ref={scrollContainerRef}
             className="flex overflow-x-auto gap-4 md:gap-6 pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-1"
           >
-            {products.map(product => (
+            {products.map(product => {
+              const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
+              const displayPrice = hasVariants ? Math.min(...product.variants!.map(v => v.price)) : (product.price || 0);
+
+              return (
               <div key={product.id} className="snap-start shrink-0 w-[160px] sm:w-[200px] md:w-[220px] lg:w-[240px]">
                 <div className="bg-[#F2EAE0] border border-[#E2D2C2] rounded-xl overflow-hidden h-full shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer">
                   
@@ -93,9 +97,9 @@ export default function ExclusiveOffers({ products }: ExclusiveOffersProps) {
                     
                     <div className="mt-auto flex items-center gap-2">
                       <span className="font-bold text-[#8B3A2B] text-[12px] md:text-[14px]">
-                        ₹{product.price.toLocaleString('en-IN')}
+                        {hasVariants ? 'From ' : ''}₹{displayPrice.toLocaleString('en-IN')}
                       </span>
-                      {product.originalPrice && (
+                      {product.originalPrice && !hasVariants && (
                         <span className="text-[10px] md:text-[11px] text-[#8C7A6B] line-through font-medium">
                           ₹{product.originalPrice.toLocaleString('en-IN')}
                         </span>
@@ -105,7 +109,7 @@ export default function ExclusiveOffers({ products }: ExclusiveOffersProps) {
 
                 </div>
               </div>
-            ))}
+            )})}
           </div>
 
           {/* Right Arrow */}

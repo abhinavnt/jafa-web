@@ -51,7 +51,7 @@ export default function EventsClient({ events, categories }: EventsClientProps) 
     <>
       <EventsHero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
-      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-16 md:mt-24">
+      <div id="events-gallery" className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-16 md:mt-24">
         {/* Title Section */}
         <div className="flex flex-col items-center justify-center text-center mb-8 md:mb-12">
           <div className="flex items-center gap-4 mb-3">

@@ -19,7 +19,11 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
     setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
   };
 
-  const CardContent = ({ product }: { product: Product }) => (
+  const CardContent = ({ product }: { product: Product }) => {
+    const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
+    const displayPrice = hasVariants ? Math.min(...product.variants!.map(v => v.price)) : (product.price || 0);
+
+    return (
     <div className="flex flex-row items-stretch bg-[#EAE2D8] border border-[#DCD0C3] rounded-xl overflow-hidden h-full shadow-sm hover:shadow-md transition-shadow group">
       {/* Content Side */}
       <div className="w-[55%] p-4 xl:p-6 flex flex-col justify-center">
@@ -34,7 +38,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
         </p>
         <div className="mt-auto flex items-center justify-between">
           <span className="font-lora text-[#2A1A12] font-semibold text-sm xl:text-base">
-            ₹{product.price.toLocaleString('en-IN')}
+            {hasVariants ? 'From ' : ''}₹{displayPrice.toLocaleString('en-IN')}
           </span>
           <button className="text-[8px] xl:text-[9px] font-bold tracking-widest text-[#2A1A12] uppercase flex items-center gap-1 border border-[#2A1A12] px-2.5 py-1.5 rounded bg-transparent hover:bg-[#2A1A12] hover:text-white transition-colors">
             SHOP NOW <ArrowRight size={10} />
@@ -52,7 +56,8 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
         />
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <section className="w-full max-w-7xl mx-auto px-4 lg:px-6 pb-16 md:pb-20 lg:pb-24 -mt-[3px]">

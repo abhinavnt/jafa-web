@@ -78,7 +78,9 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
-      <Navbar />
+      <div className="w-full sticky top-0 z-[100] bg-transparent">
+        <Navbar />
+      </div>
       <Hero />
       {activeOffer && (
         <OfferBar text={activeOffer.text} endDate={new Date(activeOffer.end_date)} />

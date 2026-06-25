@@ -9,6 +9,7 @@ export interface Product {
   originalPrice?: number;
   price: number;
   image: string;
+  variants?: { price: number; [key: string]: any }[];
 }
 
 interface ProductCardProps {

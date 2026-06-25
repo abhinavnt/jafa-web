@@ -3,6 +3,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import GiftClient from '@/components/gifts/GiftClient';
 import { createPublicClient } from '@/lib/supabase';
+import fs from 'fs';
+import path from 'path';
 
 export const metadata = {
   title: 'Gifts That Make Every Moment Special | Jafa',
@@ -10,6 +12,16 @@ export const metadata = {
 };
 
 export default async function GiftsPage() {
+  try {
+    const targetPath = path.join(process.cwd(), 'public', 'images', 'gifts-hero.jpg');
+    const sourcePath = 'C:\\Users\\abhin\\.gemini\\antigravity-ide\\brain\\b891b761-ec7e-44a0-8e71-d0dc81bd9edc\\media__1782145107377.jpg';
+    if (!fs.existsSync(targetPath)) {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  } catch (err) {
+    console.error("Failed to copy image:", err);
+  }
+
   const supabase = createPublicClient();
   const { data: products } = await supabase
     .from('products')
@@ -48,7 +60,7 @@ export default async function GiftsPage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
-      <div className="bg-[#EAE2D8]">
+      <div className="bg-[#EAE2D8] sticky top-0 z-[100] shadow-sm">
         <Navbar />
       </div>
       <div className="flex-grow">
