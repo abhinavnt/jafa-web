@@ -8,7 +8,11 @@ export default function OffersAdmin() {
   const [loading, setLoading] = useState(true);
   
   // Form State
-  const [text, setText] = useState('');
+  const [labelLeft, setLabelLeft] = useState('LIMITED TIME EXCLUSIVE OFFER');
+  const [title, setTitle] = useState('25% OFF');
+  const [subtitle, setSubtitle] = useState('ON SELECTED COLLECTIONS');
+  const [labelRight, setLabelRight] = useState('OFFER ENDS IN');
+  
   const [daysValid, setDaysValid] = useState('5');
   const [submitting, setSubmitting] = useState(false);
   
@@ -38,13 +42,18 @@ export default function OffersAdmin() {
     endDate.setDate(endDate.getDate() + parseInt(daysValid));
 
     const { error } = await supabase.from('offers').insert({
-      text,
+      text: title, // keep for backward compatibility
+      label_left: labelLeft,
+      title,
+      subtitle,
+      label_right: labelRight,
       end_date: endDate.toISOString(),
       is_active: true // New offers are active by default
     });
 
     if (!error) {
-      setText('');
+      setTitle('');
+      setSubtitle('');
       setDaysValid('5');
       fetchOffers();
     } else {
@@ -92,14 +101,56 @@ export default function OffersAdmin() {
             <form onSubmit={handleCreateOffer} className="space-y-4">
               <div>
                 <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">
-                  Offer Text
+                  Left Label
                 </label>
-                <textarea 
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder="e.g. RAMADAN COLLECTION OFFER - Up to 25% Off"
+                <input 
+                  type="text"
+                  value={labelLeft}
+                  onChange={(e) => setLabelLeft(e.target.value)}
+                  placeholder="e.g. LIMITED TIME EXCLUSIVE OFFER"
                   className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B]"
-                  rows={3}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">
+                  Main Title
+                </label>
+                <input 
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. 25% OFF"
+                  className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">
+                  Subtitle
+                </label>
+                <input 
+                  type="text"
+                  value={subtitle}
+                  onChange={(e) => setSubtitle(e.target.value)}
+                  placeholder="e.g. ON SELECTED COLLECTIONS"
+                  className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">
+                  Right Label (Above Timer)
+                </label>
+                <input 
+                  type="text"
+                  value={labelRight}
+                  onChange={(e) => setLabelRight(e.target.value)}
+                  placeholder="e.g. OFFER ENDS IN"
+                  className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B]"
                   required
                 />
               </div>
@@ -148,7 +199,8 @@ export default function OffersAdmin() {
                   return (
                     <div key={offer.id} className={`p-4 flex items-center justify-between transition-colors ${offer.is_active && !isExpired ? 'bg-green-50/50' : ''}`}>
                       <div className="flex-1 pr-4">
-                        <p className="text-[#2A1A12] font-medium text-sm mb-1">{offer.text}</p>
+                        <p className="text-[#2A1A12] font-bold text-lg mb-1">{offer.title || offer.text}</p>
+                        <p className="text-[#5C3D2E] text-sm mb-2">{offer.subtitle}</p>
                         <div className="flex items-center gap-3 text-xs">
                           <span className={`${isExpired ? 'text-red-600 font-medium' : 'text-[#8C7A6B]'}`}>
                             Expires: {new Date(offer.end_date).toLocaleDateString()} {new Date(offer.end_date).toLocaleTimeString()}

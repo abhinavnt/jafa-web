@@ -91,7 +91,13 @@ export default async function Home() {
       </div>
       <Hero />
       {activeOffer && (
-        <OfferBar text={activeOffer.text} endDate={new Date(activeOffer.end_date)} />
+        <OfferBar 
+          labelLeft={activeOffer.label_left}
+          title={activeOffer.title}
+          subtitle={activeOffer.subtitle}
+          labelRight={activeOffer.label_right}
+          endDate={activeOffer.end_date} 
+        />
       )}
       <Categories categories={categories} />
       <SignatureCollection products={signatureCollection} />
