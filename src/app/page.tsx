@@ -76,6 +76,14 @@ export default async function Home() {
     variants: Array.isArray(p.variants) ? p.variants : [],
   }));
 
+  // Fetch testimonials
+  const { data: testimonials } = await supabase
+    .from('testimonials')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  const dynamicTestimonials = testimonials && testimonials.length > 0 ? testimonials : testimonialsData;
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="w-full sticky top-0 z-[100] bg-transparent">
@@ -88,7 +96,7 @@ export default async function Home() {
       <Categories categories={categories} />
       <SignatureCollection products={signatureCollection} />
       <ExclusiveOffers products={exclusiveOffers} />
-      <Testimonials testimonials={testimonialsData} />
+      <Testimonials testimonials={dynamicTestimonials} />
       <Footer />
     </main>
   );

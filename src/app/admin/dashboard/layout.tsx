@@ -37,7 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // (This layout is applied via layout.tsx, but we can structure it carefully)
 
   return (
-    <div className="min-h-screen bg-[#F8F2EA] flex flex-col">
+    <div className="h-screen bg-[#F8F2EA] flex flex-col">
       {/* Top Navbar */}
       <div className="h-16 bg-[#1A110D] text-white px-6 flex justify-between items-center shrink-0 border-b border-white/10 relative z-10">
         <h1 className="font-lora text-xl tracking-wide">JAFA <span className="text-[#8C7A6B]">Admin</span></h1>

@@ -46,11 +46,24 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  // Calculate which items to show based on currentIndex to create an infinite loop effect
+  if (!testimonials || testimonials.length === 0) return null;
+
+  const actualItemsToShow = Math.min(itemsToShow, testimonials.length);
+  const showArrows = testimonials.length > itemsToShow;
+
   const visibleTestimonials = [];
-  for (let i = 0; i < itemsToShow; i++) {
+  for (let i = 0; i < actualItemsToShow; i++) {
     const index = (currentIndex + i) % testimonials.length;
     visibleTestimonials.push(testimonials[index]);
+  }
+
+  let gridClasses = "grid gap-6 transition-all duration-300 ease-in-out";
+  if (actualItemsToShow === 1) {
+    gridClasses += " grid-cols-1 max-w-lg mx-auto";
+  } else if (actualItemsToShow === 2) {
+    gridClasses += " grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto";
+  } else {
+    gridClasses += " grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
   }
 
   return (
@@ -64,14 +77,16 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
       <div className="relative group px-12 md:px-16">
         
         {/* Left Arrow */}
-        <button 
-          onClick={prevSlide}
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full border border-[#D4C3B3] flex items-center justify-center text-[#5C3D2E] hover:bg-[#EAE1D6] transition-colors z-10 bg-[#F8F2EA] shadow-sm"
-        >
-          <ChevronLeft size={18} />
-        </button>
+        {showArrows && (
+          <button 
+            onClick={prevSlide}
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full border border-[#D4C3B3] flex items-center justify-center text-[#5C3D2E] hover:bg-[#EAE1D6] transition-colors z-10 bg-[#F8F2EA] shadow-sm"
+          >
+            <ChevronLeft size={18} />
+          </button>
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300 ease-in-out">
+        <div className={gridClasses}>
           {visibleTestimonials.map((testimonial, idx) => (
             <div key={`${testimonial.id}-${idx}`} className="bg-[#EBE2D5] rounded-xl p-4 sm:p-6 md:p-8 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow">
               
@@ -86,7 +101,7 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
                 <div className="flex items-center gap-2 md:gap-3">
                   <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden shrink-0">
                     <Image 
-                      src={testimonial.avatar} 
+                      src={testimonial.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80'} 
                       alt={testimonial.author}
                       fill
                       sizes="(max-width: 768px) 32px, 40px"
@@ -119,12 +134,14 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
         </div>
 
         {/* Right Arrow */}
-        <button 
-          onClick={nextSlide}
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full border border-[#D4C3B3] flex items-center justify-center text-[#5C3D2E] hover:bg-[#EAE1D6] transition-colors z-10 bg-[#F8F2EA] shadow-sm"
-        >
-          <ChevronRight size={18} />
-        </button>
+        {showArrows && (
+          <button 
+            onClick={nextSlide}
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full border border-[#D4C3B3] flex items-center justify-center text-[#5C3D2E] hover:bg-[#EAE1D6] transition-colors z-10 bg-[#F8F2EA] shadow-sm"
+          >
+            <ChevronRight size={18} />
+          </button>
+        )}
 
       </div>
     </section>
