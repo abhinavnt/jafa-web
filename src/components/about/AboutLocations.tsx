@@ -9,7 +9,7 @@ export default function AboutLocations() {
       subtitle: '(Head Office)',
       address: 'Kuttiadi, Kozhikode\nKerala, India',
       phone: '+91 9072 555 111',
-      image: 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400&q=80',
+      image: '/images/jafakuttyadi.png',
     },
     {
       title: 'MANANTHAWADI',
