@@ -27,12 +27,12 @@ export default function AboutHero() {
           </div>
 
           <p className="text-[#5C3D2E] text-[13px] md:text-[16px] max-w-[450px] leading-relaxed mb-8 md:mb-10">
-            Since 2000, JAFA has been dedicated to delivering the finest dates, nuts, and gifting solutions. With a passion for quality and an eye for detail, we create experiences that make every occasion truly special.
+            From humble beginnings to becoming a trusted name in premium gifting and imported delicacies, our story is one of passion, perseverance, and purpose. Every product we offer and every experience we create reflects our commitment to quality, trust, and celebrating life's most meaningful moments.
           </p>
 
-          <button className="bg-[#2A1A12] text-[#F8F2EA] flex items-center justify-center gap-2 px-8 py-4 rounded text-[11px] md:text-[13px] font-bold tracking-widest uppercase hover:bg-[#4A2C11] transition-colors w-fit shadow-md">
+          <a href="#our-story" className="animate-smooth-bounce bg-[#2A1A12] text-[#F8F2EA] flex items-center justify-center gap-2 px-8 py-4 rounded text-[11px] md:text-[13px] font-bold tracking-widest uppercase hover:bg-[#4A2C11] transition-colors w-fit shadow-md">
             OUR STORY <ArrowRight size={16} className="md:w-5 md:h-5" />
-          </button>
+          </a>
         </div>
       </div>
 

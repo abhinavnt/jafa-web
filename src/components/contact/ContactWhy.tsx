@@ -7,7 +7,7 @@ export default function ContactWhy() {
     {
       icon: ShieldCheck,
       title: 'Trusted Since 2000',
-      desc: '24+ years of delivering\nquality & trust',
+      desc: '4+ years of delivering\nquality & trust',
     },
     {
       icon: Gem,
@@ -22,7 +22,7 @@ export default function ContactWhy() {
     {
       icon: Truck,
       title: 'Reliable Delivery',
-      desc: 'Timely & safe delivery\nacross UAE & India',
+      desc: 'Timely & safe delivery India',
     },
     {
       icon: Heart,
@@ -34,7 +34,7 @@ export default function ContactWhy() {
   return (
     <div className="w-full bg-[#EAE2D8] py-16 md:py-20 border-t border-[#DCD0C3]/60">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="flex flex-col items-center justify-center text-center mb-10 md:mb-14">
           <div className="flex items-center gap-4 mb-3">
@@ -50,11 +50,11 @@ export default function ContactWhy() {
 
         {/* Content Container */}
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-          
+
           {/* Left Image */}
           <div className="w-full lg:w-1/4 flex justify-center lg:justify-start">
             <div className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden shadow-lg border-4 border-[#F8F2EA]">
-              <Image 
+              <Image
                 src="https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?w=400&q=80"
                 alt="Jafa Premium Dates"
                 fill

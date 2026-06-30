@@ -31,7 +31,7 @@ export default function AboutOffers() {
     {
       icon: Truck,
       title: 'Timely\nDelivery',
-      description: 'Reliable and on-time delivery across the UAE.',
+      description: 'Reliable and on-time delivery.',
       image: '/images/van.png',
     },
   ];
@@ -39,7 +39,7 @@ export default function AboutOffers() {
   return (
     <div className="w-full bg-[#F8F2EA] py-16 md:py-24">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        
+
         {/* Section Header */}
         <div className="flex items-center justify-center gap-4 mb-12 md:mb-16">
           <div className="w-12 md:w-16 h-px bg-[#DCD0C3]"></div>
@@ -56,8 +56,8 @@ export default function AboutOffers() {
           {offers.map((offer, idx) => {
             const Icon = offer.icon;
             return (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="bg-[#EAE2D8] rounded-2xl flex flex-col pt-8 overflow-hidden border border-[#DCD0C3]/30 transition-transform duration-300 hover:-translate-y-2 hover:shadow-md"
               >
                 <div className="px-6 flex flex-col items-center text-center flex-1">
@@ -71,10 +71,10 @@ export default function AboutOffers() {
                     {offer.description}
                   </p>
                 </div>
-                
+
                 {/* Bottom Anchored Image */}
                 <div className="relative w-full h-[200px] sm:h-[160px] md:h-[180px] mt-auto p-4 pb-0">
-                  <Image 
+                  <Image
                     src={offer.image}
                     alt={offer.title.replace('\n', ' ')}
                     fill

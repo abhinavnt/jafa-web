@@ -50,7 +50,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-[#2A140C] text-[#EBE2D5] pt-10 pb-8 md:py-16 px-6 md:px-8 rounded-t-[30px] md:rounded-t-[40px] mt-auto relative">
-      <div className="max-w-7xl mx-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-5 gap-0 md:gap-12 relative z-10">
+      <div className="max-w-7xl mx-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-0 md:gap-12 relative z-10">
 
         {/* Brand Column */}
         <div className="lg:col-span-1 flex flex-col items-start mb-4 md:mb-0">
@@ -67,11 +67,9 @@ export default function Footer() {
             We bring you the finest dates, nuts and dry fruits, curated for a healthy and joyful lifestyle, every time. Follow us:
           </p>
           {/* Desktop Social Icons */}
-          <div className="hidden md:flex items-center gap-4 text-[#D4C3B3]">
-            <a href="#" className="hover:text-white transition-colors"><InstagramIcon size={18} /></a>
-            <a href="#" className="hover:text-white transition-colors"><FacebookIcon size={18} /></a>
-            <a href="#" className="hover:text-white transition-colors"><MessageCircle size={18} /></a>
-            <a href="#" className="hover:text-white transition-colors"><YoutubeIcon size={18} /></a>
+          <div className="hidden md:flex items-center gap-4 text-[#D4C3B3] pl-6">
+            <a href="https://www.instagram.com/jafastores?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><InstagramIcon size={18} /></a>
+            <a href="https://www.facebook.com/profile.php?id=61591449148855" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><FacebookIcon size={18} /></a>
           </div>
         </div>
 
@@ -81,43 +79,32 @@ export default function Footer() {
           <AccordionSection title="Quick Links" id="quick">
             <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
               <Link href="/" className="hover:text-white transition-colors">Home</Link>
-              <Link href="#" className="hover:text-white transition-colors">Dates & Nuts</Link>
-              <Link href="#" className="hover:text-white transition-colors">Gifts</Link>
-              <Link href="#" className="hover:text-white transition-colors">Event & Decor</Link>
-              <Link href="#" className="hover:text-white transition-colors">About Us</Link>
-              <Link href="#" className="hover:text-white transition-colors">Contact Us</Link>
+              <Link href="/dates-nuts" className="hover:text-white transition-colors">Dates & Nuts</Link>
+              <Link href="/gifts" className="hover:text-white transition-colors">Gifts</Link>
+              <Link href="/events-decor" className="hover:text-white transition-colors">Event & Decor</Link>
+              <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
+              <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
             </div>
           </AccordionSection>
 
           {/* Our Services */}
           <AccordionSection title="Our Services" id="services">
             <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
-              <Link href="#" className="hover:text-white transition-colors">All Dates</Link>
-              <Link href="#" className="hover:text-white transition-colors">Nuts & Dry Fruits</Link>
-              <Link href="#" className="hover:text-white transition-colors">Gift Hampers</Link>
-              <Link href="#" className="hover:text-white transition-colors">Corporate Gifting</Link>
-              <Link href="#" className="hover:text-white transition-colors">Premium Boxes</Link>
-              <Link href="#" className="hover:text-white transition-colors">New Arrivals</Link>
-            </div>
-          </AccordionSection>
-
-          {/* Customer Care */}
-          <AccordionSection title="Customer Care" id="care">
-            <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
-              <Link href="#" className="hover:text-white transition-colors">FAQs</Link>
-              <Link href="#" className="hover:text-white transition-colors">Shipping & Delivery</Link>
-              <Link href="#" className="hover:text-white transition-colors">Returns & Refunds</Link>
-              <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-              <Link href="#" className="hover:text-white transition-colors">Terms & Conditions</Link>
+              <Link href="/dates-nuts" className="hover:text-white transition-colors">All Dates</Link>
+              <Link href="/dates-nuts" className="hover:text-white transition-colors">Nuts & Dry Fruits</Link>
+              <Link href="/gifts" className="hover:text-white transition-colors">Gift Hampers</Link>
+              <Link href="/gifts" className="hover:text-white transition-colors">Corporate Gifting</Link>
+              <Link href="/gifts" className="hover:text-white transition-colors">Premium Boxes</Link>
+              <Link href="/dates-nuts" className="hover:text-white transition-colors">New Arrivals</Link>
             </div>
           </AccordionSection>
 
           {/* Contact Us */}
           <AccordionSection title="Contact Us" id="contact">
             <div className="flex flex-col gap-2 md:gap-3 text-[12px] md:text-sm mb-4 md:mb-8 text-[#D4C3B3] md:text-[#EBE2D5]">
-              <p>+91 98765 43210</p>
-              <p>hello@jafa.ae</p>
-              <p className="text-[10px] md:text-xs opacity-80 mt-2">123, Heritage Street,<br />Lucknow, India - 226001</p>
+              <p>09645446666</p>
+              <p>jafastore@gmail.com</p>
+              <p className="text-[10px] md:text-xs opacity-80 mt-2">Cheriya Kumbalam, Kuttiady,<br />Palery, Kerala 673508</p>
             </div>
             <a href="#" className="flex items-center justify-center gap-2 border border-[#D4C3B3]/30 rounded-full py-2.5 px-5 text-[10px] md:text-xs font-bold tracking-wider hover:bg-[#D4C3B3]/10 transition-colors w-max text-[#EBE2D5]">
               <MessageCircle size={14} className="md:w-4 md:h-4" />
@@ -130,19 +117,17 @@ export default function Footer() {
       {/* Mobile Social Icons & Copyright */}
       <div className="flex flex-col items-center mt-8 md:hidden relative z-10 pt-4">
         <div className="flex items-center gap-6 mb-6 text-[#EBE2D5]">
-          <a href="#"><InstagramIcon size={20} /></a>
-          <a href="#"><FacebookIcon size={20} /></a>
-          <a href="#"><MessageCircle size={20} /></a>
-          <a href="#"><YoutubeIcon size={20} /></a>
+          <a href="https://www.instagram.com/jafastores?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"><InstagramIcon size={20} /></a>
+          <a href="https://www.facebook.com/profile.php?id=61591449148855" target="_blank" rel="noopener noreferrer"><FacebookIcon size={20} /></a>
         </div>
         <div className="text-[10px] text-[#D4C3B3]/80 mb-8">
-          © 2024 Jafa. All Rights Reserved.
+          © 2026 Jafa. All Rights Reserved.
         </div>
       </div>
 
       {/* Desktop Copyright */}
       <div className="hidden md:block max-w-7xl mx-auto mt-12 md:mt-16 pt-6 md:pt-8 border-t border-[#D4C3B3]/20 text-center text-[10px] md:text-xs text-[#D4C3B3]/60 relative z-10">
-        © 2024 Jafa. All Rights Reserved.
+        © 2026 Jafa. All Rights Reserved.
       </div>
     </footer>
   );
