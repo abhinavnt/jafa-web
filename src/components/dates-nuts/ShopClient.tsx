@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import ShopHero from './ShopHero';
 import CategoryPills, { CategoryData } from './CategoryPills';
 import ProductGrid from './ProductGrid';
@@ -15,6 +15,18 @@ interface ShopClientProps {
 export default function ShopClient({ products, exclusiveOffers, categories }: ShopClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to results when user searches
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length > 0) {
+      // Small delay to allow the DOM to update before scrolling
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, []);
 
   // Filter exclusive offers
   const filteredExclusiveOffers = useMemo(() => {
@@ -53,8 +65,11 @@ export default function ShopClient({ products, exclusiveOffers, categories }: Sh
 
   return (
     <div className="w-full flex flex-col items-center bg-[#F8F2EA] min-h-screen pb-12">
-      <ShopHero onSearch={setSearchQuery} />
+      <ShopHero onSearch={handleSearch} />
       
+      {/* Scroll target for search results */}
+      <div ref={resultsRef} />
+
       {/* Exclusive Offers - Hide if search yields no results */}
       {filteredExclusiveOffers.length > 0 && (
         <div className="w-full mt-4 md:mt-8">

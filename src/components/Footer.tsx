@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { MessageCircle, ChevronsRight } from 'lucide-react';
+import { MessageCircle, ChevronsRight, Phone, Mail, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -63,13 +63,16 @@ export default function Footer() {
               className="object-contain opacity-90 w-[120px] md:w-[160px] h-auto mix-blend-screen"
             />
           </div>
-          <p className="text-[11px] md:text-xs text-[#D4C3B3]/80 mb-6 md:mb-8 max-w-[200px] leading-relaxed hidden md:block">
-            We bring you the finest dates, nuts and dry fruits, curated for a healthy and joyful lifestyle, every time. Follow us:
+          <p className="text-[11px] md:text-xs text-[#D4C3B3]/80 mb-4 max-w-[200px] leading-relaxed hidden md:block">
+            We bring you the finest dates, nuts and dry fruits, curated for a healthy and joyful lifestyle, every time.
           </p>
           {/* Desktop Social Icons */}
-          <div className="hidden md:flex items-center gap-4 text-[#D4C3B3] pl-6">
-            <a href="https://www.instagram.com/jafastores?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><InstagramIcon size={18} /></a>
-            <a href="https://www.facebook.com/profile.php?id=61591449148855" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><FacebookIcon size={18} /></a>
+          <div className="hidden md:flex items-center gap-3 text-[#D4C3B3]">
+            <span className="text-[11px] md:text-xs text-[#D4C3B3]/80 font-medium">Follow us:</span>
+            <div className="flex items-center gap-3">
+              <a href="https://www.instagram.com/jafastores?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><InstagramIcon size={18} /></a>
+              <a href="https://www.facebook.com/profile.php?id=61591449148855" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><FacebookIcon size={18} /></a>
+            </div>
           </div>
         </div>
 
@@ -101,10 +104,21 @@ export default function Footer() {
 
           {/* Contact Us */}
           <AccordionSection title="Contact Us" id="contact">
-            <div className="flex flex-col gap-2 md:gap-3 text-[12px] md:text-sm mb-4 md:mb-8 text-[#D4C3B3] md:text-[#EBE2D5]">
-              <p>09645446666</p>
-              <p>jafastore@gmail.com</p>
-              <p className="text-[10px] md:text-xs opacity-80 mt-2">Cheriya Kumbalam, Kuttiady,<br />Palery, Kerala 673508</p>
+            <div className="flex flex-col gap-3 md:gap-4 text-[12px] md:text-sm mb-4 md:mb-8 text-[#D4C3B3] md:text-[#EBE2D5]">
+              <div className="flex items-center gap-3">
+                <Phone size={16} className="shrink-0 opacity-80" />
+                <span>09645446666</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail size={16} className="shrink-0 opacity-80" />
+                <span>jafastore@gmail.com</span>
+              </div>
+              <div className="flex items-start gap-3 mt-1">
+                <MapPin size={16} className="shrink-0 mt-0.5 opacity-80" />
+                <span className="text-[10px] md:text-xs opacity-80 leading-relaxed">
+                  Cheriya Kumbalam, Kuttiady,<br />Palery, Kerala 673508
+                </span>
+              </div>
             </div>
             <a href="#" className="flex items-center justify-center gap-2 border border-[#D4C3B3]/30 rounded-full py-2.5 px-5 text-[10px] md:text-xs font-bold tracking-wider hover:bg-[#D4C3B3]/10 transition-colors w-max text-[#EBE2D5]">
               <MessageCircle size={14} className="md:w-4 md:h-4" />
