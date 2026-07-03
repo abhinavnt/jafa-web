@@ -13,7 +13,10 @@ export default function OffersAdmin() {
   const [subtitle, setSubtitle] = useState('ON SELECTED COLLECTIONS');
   const [labelRight, setLabelRight] = useState('OFFER ENDS IN');
   
+  const [durationType, setDurationType] = useState('days'); // 'days', 'hours', 'date'
   const [daysValid, setDaysValid] = useState('5');
+  const [hoursValid, setHoursValid] = useState('24');
+  const [specificDate, setSpecificDate] = useState('');
   const [submitting, setSubmitting] = useState(false);
   
   const supabase = createClient();
@@ -37,9 +40,15 @@ export default function OffersAdmin() {
     e.preventDefault();
     setSubmitting(true);
     
-    // Calculate end date based on days valid
+    // Calculate end date based on duration type
     const endDate = new Date();
-    endDate.setDate(endDate.getDate() + parseInt(daysValid));
+    if (durationType === 'days') {
+      endDate.setDate(endDate.getDate() + parseInt(daysValid));
+    } else if (durationType === 'hours') {
+      endDate.setHours(endDate.getHours() + parseInt(hoursValid));
+    } else if (durationType === 'date' && specificDate) {
+      endDate.setTime(new Date(specificDate).getTime());
+    }
 
     const { error } = await supabase.from('offers').insert({
       text: title, // keep for backward compatibility
@@ -157,16 +166,62 @@ export default function OffersAdmin() {
               
               <div>
                 <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">
-                  Valid For (Days)
+                  Duration Type
                 </label>
-                <input 
-                  type="number" 
-                  min="1"
-                  value={daysValid}
-                  onChange={(e) => setDaysValid(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B]"
-                  required
-                />
+                <select
+                  value={durationType}
+                  onChange={(e) => setDurationType(e.target.value)}
+                  className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B] mb-4"
+                >
+                  <option value="days">Valid for Days</option>
+                  <option value="hours">Valid for Hours</option>
+                  <option value="date">Specific End Date</option>
+                </select>
+
+                {durationType === 'days' && (
+                  <div>
+                    <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">
+                      Valid For (Days)
+                    </label>
+                    <input 
+                      type="number" 
+                      min="1"
+                      value={daysValid}
+                      onChange={(e) => setDaysValid(e.target.value)}
+                      className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B]"
+                      required
+                    />
+                  </div>
+                )}
+                {durationType === 'hours' && (
+                  <div>
+                    <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">
+                      Valid For (Hours)
+                    </label>
+                    <input 
+                      type="number" 
+                      min="1"
+                      value={hoursValid}
+                      onChange={(e) => setHoursValid(e.target.value)}
+                      className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B]"
+                      required
+                    />
+                  </div>
+                )}
+                {durationType === 'date' && (
+                  <div>
+                    <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">
+                      Specific End Date & Time
+                    </label>
+                    <input 
+                      type="datetime-local" 
+                      value={specificDate}
+                      onChange={(e) => setSpecificDate(e.target.value)}
+                      className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded text-sm focus:outline-none focus:border-[#8B3A2B]"
+                      required
+                    />
+                  </div>
+                )}
               </div>
 
               <button 
