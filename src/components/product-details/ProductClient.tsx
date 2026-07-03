@@ -16,6 +16,7 @@ interface ProductClientProps {
 export default function ProductClient({ product }: ProductClientProps) {
   const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
   const [activeVariantIndex, setActiveVariantIndex] = useState(0);
+  const isOutOfStock = product.status === 'Out of Stock';
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -46,7 +47,8 @@ export default function ProductClient({ product }: ProductClientProps) {
         <div className="w-full md:sticky md:top-24 z-10">
           <ImageGallery 
             images={product.images || [product.image]} 
-            badge={product.badge} 
+            badge={product.badge}
+            status={product.status}
           />
         </div>
 
@@ -67,9 +69,17 @@ export default function ProductClient({ product }: ProductClientProps) {
             soldCount={product.soldCount}
           />
 
+          {/* Out of Stock Banner */}
+          {isOutOfStock && (
+            <div className="flex items-center gap-2 bg-red-800/10 border border-red-800/30 rounded-xl px-4 py-3 mb-6">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-800 shrink-0" />
+              <span className="text-red-800 text-[12px] md:text-[13px] font-bold tracking-wider uppercase">Currently Out of Stock</span>
+            </div>
+          )}
+
           <div className="mb-6">
             <div className="flex items-end gap-3 md:gap-4 mb-2">
-              <span className="text-[#8B3A2B] text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-none">
+              <span className={`text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-none ${isOutOfStock ? 'text-[#8C7A6B]' : 'text-[#8B3A2B]'}`}>
                 ₹{(displayPrice || 0).toLocaleString('en-IN')}
               </span>
               {product.originalPrice && !hasVariants && (
@@ -78,7 +88,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                 </span>
               )}
             </div>
-            {product.originalPrice && !hasVariants && (
+            {product.originalPrice && !hasVariants && !isOutOfStock && (
               <p className="text-[#8B3A2B] text-[11px] md:text-[12px] font-bold uppercase tracking-wider mt-2">
                 Save ₹{(product.originalPrice - (product.price || 0)).toLocaleString('en-IN')}
               </p>
@@ -95,15 +105,20 @@ export default function ProductClient({ product }: ProductClientProps) {
 
           {/* WhatsApp Button */}
           <button 
-            onClick={handleWhatsApp}
-            className="w-full bg-[#2A1A12] hover:bg-[#4A2C11] text-[#F8F2EA] flex flex-col items-center justify-center py-4 md:py-5 rounded-xl transition-colors shadow-md group mb-8"
+            onClick={isOutOfStock ? undefined : handleWhatsApp}
+            disabled={isOutOfStock}
+            className={`w-full flex flex-col items-center justify-center py-4 md:py-5 rounded-xl transition-colors shadow-md group mb-8 ${
+              isOutOfStock 
+                ? 'bg-[#8C7A6B] cursor-not-allowed opacity-60 text-[#F8F2EA]' 
+                : 'bg-[#2A1A12] hover:bg-[#4A2C11] text-[#F8F2EA]'
+            }`}
           >
             <div className="flex items-center gap-2 text-[14px] md:text-[15px] font-bold tracking-wider uppercase mb-1 md:mb-1.5">
               <MessageCircle size={18} className="text-[#D4BAA1]" />
-              WHATSAPP ENQUIRY
+              {isOutOfStock ? 'OUT OF STOCK' : 'WHATSAPP ENQUIRY'}
             </div>
             <div className="text-[10px] md:text-[11px] text-[#DCD0C3]/80 tracking-wide font-medium">
-              Get in touch for pricing, bulk orders & custom requests
+              {isOutOfStock ? 'This product is currently unavailable' : 'Get in touch for pricing, bulk orders & custom requests'}
             </div>
           </button>
 

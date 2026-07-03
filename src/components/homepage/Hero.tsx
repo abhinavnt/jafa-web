@@ -7,7 +7,7 @@ export default function Hero() {
     <section className="w-full bg-[#F8F2EA] relative overflow-hidden">
       {/* Container for Left Content */}
       <div className="w-full max-w-7xl mx-auto px-4 lg:px-6 min-h-[500px] md:min-h-[600px] lg:min-h-[680px] flex items-center relative z-10">
-        <div className="w-full sm:w-[55%] md:w-[50%] lg:w-[45%] py-12 md:py-16 lg:py-0">
+        <div className="w-full sm:w-[55%] md:w-[45%] lg:w-[35%] py-12 md:py-16 lg:py-0 relative z-20">
           <p className="uppercase tracking-[0.2em] md:tracking-[0.3em] lg:tracking-[0.35em] text-[9px] md:text-[10px] lg:text-xs text-[#8A6A5B] font-medium mb-3 md:mb-4 lg:mb-6">
             TREASURED BY NATURE
           </p>
@@ -48,9 +48,9 @@ export default function Hero() {
       </div>
 
       {/* ABSOLUTE FULL-BLEED IMAGE ON THE RIGHT */}
-      <div className="absolute top-0 right-0 w-[60%] sm:w-[60%] md:w-[60%] lg:w-[55%] h-full z-0">
+      <div className="absolute top-0 right-0 w-full sm:w-[70%] md:w-[75%] lg:w-[75%] h-full z-0">
         <Image
-          src="/images/hero.jpg"
+          src="/images/Hero_Clarity_Enhanced.png"
           alt="Jafa Premium Collection"
           fill
           priority
@@ -65,10 +65,14 @@ export default function Hero() {
         <div
           className="
             absolute inset-y-0 left-0
-            w-[70%] md:w-[50%] lg:w-[40%]
+            w-full md:w-[60%] lg:w-[50%]
             bg-gradient-to-r
             from-[#F8F2EA]
-            via-[#F8F2EA]/80
+            from-20%
+            md:from-10%
+            via-[#F8F2EA]/95
+            via-70%
+            md:via-40%
             to-transparent
           "
         />
