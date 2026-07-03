@@ -56,6 +56,7 @@ export default async function Home() {
     image: p.image,
     badge: p.is_new ? 'NEW' : 'PREMIUM',
     variants: Array.isArray(p.variants) ? p.variants : [],
+    status: p.status,
   }));
 
   // Fetch Exclusive Offers (Products marked as exclusive)
@@ -74,6 +75,7 @@ export default async function Home() {
     image: p.image,
     badge: 'SALE',
     variants: Array.isArray(p.variants) ? p.variants : [],
+    status: p.status,
   }));
 
   // Fetch testimonials
