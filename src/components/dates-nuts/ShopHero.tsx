@@ -28,8 +28,8 @@ export default function ShopHero({ onSearch }: ShopHeroProps) {
     <section className="w-full bg-[#F8F2EA] relative overflow-hidden">
       {/* Container for Left Content */}
       <div className="w-full max-w-7xl mx-auto px-4 lg:px-8 min-h-[400px] md:min-h-[500px] lg:min-h-[550px] flex items-center relative z-10">
-        <div className="w-full sm:w-[65%] md:w-[60%] lg:w-[50%] py-12 md:py-16">
-          
+        <div className="w-full sm:w-[65%] md:w-[45%] lg:w-[35%] py-12 md:py-16 relative z-20">
+
           <div className="flex items-center gap-2 mb-3 md:mb-4">
             <div className="w-1.5 h-1.5 rotate-45 bg-[#B89B82]"></div>
             <p className="uppercase tracking-[0.2em] text-[9px] md:text-[10px] text-[#8A6A5B] font-medium">
@@ -51,9 +51,9 @@ export default function ShopHero({ onSearch }: ShopHeroProps) {
             <div className="pl-3 md:pl-4 text-[#8C7A6B]">
               <Search size={18} />
             </div>
-            <input 
-              type="text" 
-              placeholder="Search dates, nuts or dry fruits..." 
+            <input
+              type="text"
+              placeholder="Search dates, nuts or dry fruits..."
               value={localQuery}
               onChange={(e) => setLocalQuery(e.target.value)}
               className="flex-1 bg-transparent border-none outline-none px-3 md:px-4 text-[12px] md:text-sm text-[#2A1A12] placeholder:text-[#8C7A6B]"
@@ -87,9 +87,9 @@ export default function ShopHero({ onSearch }: ShopHeroProps) {
       </div>
 
       {/* ABSOLUTE FULL-BLEED IMAGE ON THE RIGHT */}
-      <div className="absolute top-0 right-0 w-[55%] sm:w-[50%] md:w-[50%] lg:w-[50%] h-full z-0">
+      <div className="absolute top-0 right-0 w-full sm:w-[70%] md:w-[75%] lg:w-[75%] h-full z-0">
         <Image
-          src="/images/hero.jpg"
+          src="/images/Dates&Nuts_Hero.png"
           alt="Dates and Nuts Banner"
           fill
           priority
@@ -100,10 +100,14 @@ export default function ShopHero({ onSearch }: ShopHeroProps) {
         <div
           className="
             absolute inset-y-0 left-0
-            w-[80%] md:w-[60%] lg:w-[40%]
+            w-full md:w-[60%] lg:w-[50%]
             bg-gradient-to-r
             from-[#F8F2EA]
-            via-[#F8F2EA]/90
+            from-20%
+            md:from-10%
+            via-[#F8F2EA]/95
+            via-70%
+            md:via-40%
             to-transparent
           "
         />

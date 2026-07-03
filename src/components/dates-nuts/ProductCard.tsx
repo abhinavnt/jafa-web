@@ -18,6 +18,7 @@ export interface ShopProduct {
   soldCount?: string;
   sizes?: { label: string; weight: string; price: number; popular?: boolean }[];
   variants?: { name: string; price: number }[];
+  status?: string;
 }
 
 interface ProductCardProps {
@@ -29,19 +30,27 @@ export default function ProductCard({ product, basePath = '/dates-nuts' }: Produ
   const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
   const displayPrice = hasVariants ? Math.min(...product.variants!.map(v => v.price)) : product.price;
 
+  const isOutOfStock = product.status === 'Out of Stock';
+
   return (
-    <Link href={`${basePath}/${product.id}`} className="bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square">
+    <Link href={`${basePath}/${product.id}`} className={`bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square ${isOutOfStock ? 'opacity-75 grayscale-[0.5]' : ''}`}>
       
       {/* Image Area */}
       <div className="relative h-[55%] w-full bg-[#EAE2D8]">
         {/* Badge */}
-        {product.badge && (
+        {isOutOfStock ? (
+          <div className="absolute top-1.5 left-1.5 md:top-2 md:left-2 bg-red-800 text-white font-bold text-[8px] md:text-[9px] rounded-sm px-1.5 py-1 z-10 text-center leading-none shadow-sm">
+            <div className="mb-[2px]">OUT</div>
+            <div className="mb-[2px]">OF</div>
+            <div>STOCK</div>
+          </div>
+        ) : product.badge ? (
           <div className="absolute top-1.5 left-1.5 md:top-2 md:left-2 bg-[#D4BAA1] text-[#4A2C11] font-bold text-[8px] md:text-[9px] rounded-sm px-1.5 py-1 z-10 text-center leading-none shadow-sm">
             {product.badge.split(' ').map((word, i) => (
               <div key={i} className="mb-[2px] last:mb-0">{word}</div>
             ))}
           </div>
-        )}
+        ) : null}
         
         <Image 
           src={product.image} 

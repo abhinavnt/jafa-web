@@ -16,6 +16,7 @@ interface GiftProductClientProps {
 export default function GiftProductClient({ product }: GiftProductClientProps) {
   const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
   const [activeVariantIndex, setActiveVariantIndex] = useState(0);
+  const isOutOfStock = product.status === 'Out of Stock';
 
   const breadcrumbs = [
     { label: 'Home', href: '/' },
@@ -55,7 +56,8 @@ export default function GiftProductClient({ product }: GiftProductClientProps) {
           
           <ImageGallery 
             images={product.images || [product.image]} 
-            badge={product.badge} 
+            badge={product.badge}
+            status={product.status}
           />
         </div>
         
@@ -66,9 +68,17 @@ export default function GiftProductClient({ product }: GiftProductClientProps) {
             shortDescription={product.description?.split('\n')[0] || ''} 
           />
           
+          {/* Out of Stock Banner */}
+          {isOutOfStock && (
+            <div className="flex items-center gap-2 bg-red-800/10 border border-red-800/30 rounded-xl px-4 py-3 mb-6">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-800 shrink-0" />
+              <span className="text-red-800 text-[12px] md:text-[13px] font-bold tracking-wider uppercase">Currently Out of Stock</span>
+            </div>
+          )}
+
           <div className="mb-6">
             <div className="flex items-end gap-3 md:gap-4 mb-2">
-              <span className="text-[#8B3A2B] text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-none">
+              <span className={`text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-none ${isOutOfStock ? 'text-[#8C7A6B]' : 'text-[#8B3A2B]'}`}>
                 ₹{(displayPrice || 0).toLocaleString('en-IN')}
               </span>
               {product.originalPrice && !hasVariants && (
@@ -90,17 +100,22 @@ export default function GiftProductClient({ product }: GiftProductClientProps) {
           )}
           
           <button 
-            onClick={handleWhatsApp}
-            className="w-full bg-[#2A1A12] text-[#F8F2EA] flex flex-col items-center justify-center py-4 rounded-lg mb-10 hover:bg-[#4A2C11] transition-colors"
+            onClick={isOutOfStock ? undefined : handleWhatsApp}
+            disabled={isOutOfStock}
+            className={`w-full flex flex-col items-center justify-center py-4 rounded-lg mb-10 transition-colors ${
+              isOutOfStock 
+                ? 'bg-[#8C7A6B] cursor-not-allowed opacity-60 text-[#F8F2EA]' 
+                : 'bg-[#2A1A12] hover:bg-[#4A2C11] text-[#F8F2EA]'
+            }`}
           >
             <div className="flex items-center gap-2 mb-1">
               <MessageCircle size={18} />
               <span className="text-[14px] font-bold tracking-widest uppercase">
-                WHATSAPP ENQUIRY
+                {isOutOfStock ? 'OUT OF STOCK' : 'WHATSAPP ENQUIRY'}
               </span>
             </div>
             <span className="text-[#DCD0C3] text-[10px] md:text-[11px] font-medium">
-              Get in touch for pricing, bulk orders & custom requests
+              {isOutOfStock ? 'This product is currently unavailable' : 'Get in touch for pricing, bulk orders & custom requests'}
             </span>
           </button>
           

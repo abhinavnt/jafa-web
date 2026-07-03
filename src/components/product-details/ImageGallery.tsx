@@ -6,10 +6,12 @@ import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 interface ImageGalleryProps {
   images: string[];
   badge?: string;
+  status?: string;
 }
 
-export default function ImageGallery({ images, badge }: ImageGalleryProps) {
+export default function ImageGallery({ images, badge, status }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const isOutOfStock = status === 'Out of Stock';
 
   const handleNext = () => {
     setActiveIndex((prev) => (prev + 1) % images.length);
@@ -47,11 +49,15 @@ export default function ImageGallery({ images, badge }: ImageGalleryProps) {
       <div className="relative w-full aspect-[4/3] md:aspect-square lg:aspect-[4/3] bg-[#EAE2D8] rounded-2xl md:rounded-[32px] overflow-hidden group">
         
         {/* Badge */}
-        {badge && (
+        {isOutOfStock ? (
+          <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-red-800 text-white font-bold text-[10px] md:text-[12px] lg:text-[13px] rounded-md px-3 py-1.5 z-10 text-center tracking-wider shadow-sm">
+            OUT OF STOCK
+          </div>
+        ) : badge ? (
           <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-[#D4BAA1] text-[#4A2C11] font-bold text-[10px] md:text-[12px] lg:text-[13px] rounded-md px-3 py-1.5 z-10 text-center tracking-wider shadow-sm">
             {badge}
           </div>
-        )}
+        ) : null}
 
         <Image 
           src={images[activeIndex]} 
@@ -59,7 +65,7 @@ export default function ImageGallery({ images, badge }: ImageGalleryProps) {
           fill
           priority
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover mix-blend-multiply"
+          className={`object-cover mix-blend-multiply ${isOutOfStock ? 'opacity-75 grayscale-[0.5]' : ''}`}
         />
 
         {/* Arrows */}

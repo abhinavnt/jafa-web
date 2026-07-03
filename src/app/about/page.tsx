@@ -17,7 +17,7 @@ export default function AboutPage() {
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
       
       {/* Navbar Container */}
-      <div className="bg-[#F8F2EA] relative z-40">
+      <div className="w-full sticky top-0 z-[100] bg-[#F8F2EA]">
         <Navbar />
       </div>
 

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import GiftsHero from './GiftsHero';
 import GiftCategories from './GiftCategories';
@@ -15,6 +15,7 @@ interface GiftClientProps {
 export default function GiftClient({ gifts, categories }: GiftClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   // Use debounce for search input
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -22,6 +23,13 @@ export default function GiftClient({ gifts, categories }: GiftClientProps) {
     const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Auto-scroll to results when user searches
+  useEffect(() => {
+    if (debouncedSearch.trim().length > 0) {
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [debouncedSearch]);
 
   // Filter products based on category and search
   const filteredProducts = useMemo(() => {
@@ -47,6 +55,10 @@ export default function GiftClient({ gifts, categories }: GiftClientProps) {
   return (
     <>
       <GiftsHero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      
+      {/* Scroll target for search results */}
+      <div ref={resultsRef} />
+
       {/* Grid Section Header */}
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-12 md:mt-20 relative">
         
@@ -77,3 +89,4 @@ export default function GiftClient({ gifts, categories }: GiftClientProps) {
     </>
   );
 }
+

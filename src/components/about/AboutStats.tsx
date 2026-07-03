@@ -5,27 +5,27 @@ export default function AboutStats() {
   const stats = [
     {
       icon: Gift,
-      value: '24+',
+      value: '4+',
       label: 'Years of Trust',
     },
     {
       icon: Package,
-      value: '500+',
+      value: '70+',
       label: 'Premium Products',
     },
     {
       icon: Users,
-      value: '50K+',
+      value: '1K+',
       label: 'Happy Customers',
     },
     {
       icon: PartyPopper,
-      value: '1000+',
+      value: '100+',
       label: 'Events Delivered',
     },
     {
       icon: Store,
-      value: '5',
+      value: '13',
       label: 'Branches',
     },
   ];
@@ -33,7 +33,7 @@ export default function AboutStats() {
   return (
     <div className="w-full bg-[#F8F2EA] py-12 md:py-16">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        
+
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12">
           {stats.map((stat, idx) => {
             const Icon = stat.icon;

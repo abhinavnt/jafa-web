@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, PlayCircle } from "lucide-react";
 
 export default function Hero() {
@@ -6,7 +7,7 @@ export default function Hero() {
     <section className="w-full bg-[#F8F2EA] relative overflow-hidden">
       {/* Container for Left Content */}
       <div className="w-full max-w-7xl mx-auto px-4 lg:px-6 min-h-[500px] md:min-h-[600px] lg:min-h-[680px] flex items-center relative z-10">
-        <div className="w-full sm:w-[55%] md:w-[50%] lg:w-[45%] py-12 md:py-16 lg:py-0">
+        <div className="w-full sm:w-[55%] md:w-[45%] lg:w-[35%] py-12 md:py-16 lg:py-0 relative z-20">
           <p className="uppercase tracking-[0.2em] md:tracking-[0.3em] lg:tracking-[0.35em] text-[9px] md:text-[10px] lg:text-xs text-[#8A6A5B] font-medium mb-3 md:mb-4 lg:mb-6">
             TREASURED BY NATURE
           </p>
@@ -30,26 +31,26 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 lg:gap-6 mt-6 md:mt-8 lg:mt-10">
-            <button className="bg-[#2A140C] text-white px-5 py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-4 rounded-full flex items-center gap-2 text-[10px] md:text-xs lg:text-sm font-semibold tracking-wide">
+            <a href="#collection" className="bg-[#2A140C] text-white px-5 py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-4 rounded-full flex items-center gap-2 text-[10px] md:text-xs lg:text-sm font-semibold tracking-wide animate-subtle-bounce">
               EXPLORE COLLECTION
               <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 lg:w-[18px] lg:h-[18px]" />
-            </button>
+            </a>
 
-            <button className="flex items-center gap-2 md:gap-3 text-[#2A140C] text-[10px] md:text-xs lg:text-sm font-bold tracking-wider">
+            <Link href="/about#our-story" className="flex items-center gap-2 md:gap-3 text-[#2A140C] text-[10px] md:text-xs lg:text-sm font-bold tracking-wider animate-subtle-bounce hover:text-[#8A6A5B] transition-colors">
               <PlayCircle
                 strokeWidth={1.5}
                 className="text-[#5C3D2E] w-8 h-8 md:w-9 md:h-9 lg:w-[42px] lg:h-[42px]"
               />
               OUR STORY
-            </button>
+            </Link>
           </div>
         </div>
       </div>
 
       {/* ABSOLUTE FULL-BLEED IMAGE ON THE RIGHT */}
-      <div className="absolute top-0 right-0 w-[60%] sm:w-[60%] md:w-[60%] lg:w-[55%] h-full z-0">
+      <div className="absolute top-0 right-0 w-full sm:w-[70%] md:w-[75%] lg:w-[75%] h-full z-0">
         <Image
-          src="/images/hero.jpg"
+          src="/images/Hero_Clarity_Enhanced.png"
           alt="Jafa Premium Collection"
           fill
           priority
@@ -64,10 +65,14 @@ export default function Hero() {
         <div
           className="
             absolute inset-y-0 left-0
-            w-[70%] md:w-[50%] lg:w-[40%]
+            w-full md:w-[60%] lg:w-[50%]
             bg-gradient-to-r
             from-[#F8F2EA]
-            via-[#F8F2EA]/80
+            from-20%
+            md:from-10%
+            via-[#F8F2EA]/95
+            via-70%
+            md:via-40%
             to-transparent
           "
         />

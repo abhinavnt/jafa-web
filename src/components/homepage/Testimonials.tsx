@@ -92,7 +92,7 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
               
               <div className="flex gap-3 md:gap-4 mb-3 md:mb-6">
                 <span className="font-serif text-2xl md:text-3xl font-bold text-[#2A1A12] leading-none mt-0.5 md:mt-1">“</span>
-                <p className="text-[#2A1A12] text-[11px] sm:text-[12px] md:text-[14px] leading-relaxed font-medium">
+                <p className="text-[#2A1A12] text-[11px] sm:text-[12px] md:text-[14px] leading-relaxed font-medium line-clamp-6 break-words">
                   {testimonial.text}
                 </p>
               </div>

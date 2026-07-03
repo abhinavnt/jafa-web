@@ -6,8 +6,41 @@
   --font-sans: var(--font-lora), ui-sans-serif, system-ui, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
 }
 
+button, a {
+  cursor: pointer;
+}
+
+@keyframes smoothBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-smooth-bounce {
+  animation: smoothBounce 2s infinite ease-in-out;
+}
+
+@keyframes subtleBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-subtle-bounce {
+  animation: subtleBounce 3s infinite ease-in-out;
+}

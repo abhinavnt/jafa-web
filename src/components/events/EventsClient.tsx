@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import EventsHero from './EventsHero';
 import EventsCategories from './EventsCategories';
@@ -15,12 +15,20 @@ interface EventsClientProps {
 export default function EventsClient({ events, categories }: EventsClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const [debouncedSearch, setDebouncedSearch] = useState('');
   React.useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Auto-scroll to results when user searches
+  useEffect(() => {
+    if (debouncedSearch.trim().length > 0) {
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [debouncedSearch]);
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
@@ -38,7 +46,7 @@ export default function EventsClient({ events, categories }: EventsClientProps) 
     }
 
     return filtered;
-  }, [activeCategory, debouncedSearch]);
+  }, [events, activeCategory, debouncedSearch]);
 
   const handleCategorySelect = (id: string) => {
     setActiveCategory(prev => prev === id ? 'All' : id);
@@ -51,6 +59,9 @@ export default function EventsClient({ events, categories }: EventsClientProps) 
     <>
       <EventsHero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
+      {/* Scroll target for search results */}
+      <div ref={resultsRef} />
+
       <div id="events-gallery" className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 mt-16 md:mt-24">
         {/* Title Section */}
         <div className="flex flex-col items-center justify-center text-center mb-8 md:mb-12">
@@ -83,3 +94,4 @@ export default function EventsClient({ events, categories }: EventsClientProps) 
     </>
   );
 }
+
