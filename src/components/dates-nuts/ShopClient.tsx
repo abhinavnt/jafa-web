@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import ShopHero from './ShopHero';
 import CategoryPills, { CategoryData } from './CategoryPills';
 import ProductGrid from './ProductGrid';
@@ -14,66 +14,59 @@ interface ShopClientProps {
 
 export default function ShopClient({ products, exclusiveOffers, categories }: ShopClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  // Debounce search input — fire filters 300ms after user stops typing
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
-  // Auto-scroll to results when debounced search updates
-  useEffect(() => {
-    if (debouncedSearch.trim().length > 0) {
-      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [debouncedSearch]);
-
-  // handleSearch only updates raw input state (input stays responsive)
-  const handleSearch = useCallback((query: string) => {
+  // Only triggered on explicit submit (Enter, Search button, or suggestion click)
+  const handleSearchSubmit = useCallback((query: string) => {
     setSearchQuery(query);
+    if (query.trim().length > 0) {
+      // Slight delay to let state update render the filtered results
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
   }, []);
+
+  // Search items for suggestions (titles + categories)
+  const searchItems = useMemo(() => {
+    return products.map(p => ({ title: p.title, category: p.category }));
+  }, [products]);
 
   // Filter exclusive offers
   const filteredExclusiveOffers = useMemo(() => {
-    if (!debouncedSearch) return exclusiveOffers;
-    const searchLower = debouncedSearch.toLowerCase();
+    if (!searchQuery) return exclusiveOffers;
+    const searchLower = searchQuery.toLowerCase();
     return exclusiveOffers.filter(offer =>
       offer.title.toLowerCase().includes(searchLower)
     );
-  }, [debouncedSearch, exclusiveOffers]);
+  }, [searchQuery, exclusiveOffers]);
 
   // Filter categories
   const filteredCategories = useMemo(() => {
-    if (!debouncedSearch) return categories;
-    const searchLower = debouncedSearch.toLowerCase();
+    if (!searchQuery) return categories;
+    const searchLower = searchQuery.toLowerCase();
     return categories.filter(cat =>
       cat.title.toLowerCase().includes(searchLower) ||
       cat.subtitle?.toLowerCase().includes(searchLower)
     );
-  }, [debouncedSearch, categories]);
+  }, [searchQuery, categories]);
 
   // Filter products
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      // Category Match
       const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
-
-      // Search Match
-      const searchLower = debouncedSearch.toLowerCase();
-      const matchesSearch = !debouncedSearch ||
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch = !searchQuery ||
         product.title.toLowerCase().includes(searchLower) ||
         product.category.toLowerCase().includes(searchLower);
-
       return matchesCategory && matchesSearch;
     });
-  }, [products, debouncedSearch, activeCategory]);
+  }, [products, searchQuery, activeCategory]);
 
   return (
     <div className="w-full flex flex-col items-center bg-[#F8F2EA] min-h-screen pb-12">
-      <ShopHero onSearch={handleSearch} />
+      <ShopHero onSearchSubmit={handleSearchSubmit} items={searchItems} />
       
       {/* Scroll target for search results */}
       <div ref={resultsRef} />

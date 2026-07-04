@@ -1,6 +1,7 @@
 'use client';
 import React, { useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product } from './ProductCard';
 
@@ -66,8 +67,8 @@ export default function ExclusiveOffers({ products }: ExclusiveOffersProps) {
               const displayPrice = hasVariants ? Math.min(...product.variants!.map(v => v.price)) : (product.price || 0);
 
               return (
-              <div key={product.id} className="snap-start shrink-0 w-[160px] sm:w-[200px] md:w-[220px] lg:w-[240px]">
-                <div className="bg-[#F2EAE0] border border-[#E2D2C2] rounded-xl overflow-hidden h-full shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer">
+              <Link key={product.id} href={`/dates-nuts/${product.id}`} className="snap-start shrink-0 w-[160px] sm:w-[200px] md:w-[220px] lg:w-[240px]">
+                <div className="bg-[#F2EAE0] border border-[#E2D2C2] rounded-xl overflow-hidden h-full shadow-sm hover:shadow-md transition-shadow flex flex-col group">
                   
                   {/* Image Area */}
                   <div className="relative h-[120px] sm:h-[140px] md:h-[160px] w-full bg-[#EAE2D8]">
@@ -108,7 +109,7 @@ export default function ExclusiveOffers({ products }: ExclusiveOffersProps) {
                   </div>
 
                 </div>
-              </div>
+              </Link>
             )})}
           </div>
 

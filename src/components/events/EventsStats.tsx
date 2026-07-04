@@ -2,9 +2,9 @@ import React from 'react';
 import { Share2, Award, Users, ShieldCheck } from 'lucide-react';
 
 const stats = [
-  { icon: Share2, value: '500+', label: 'Events Executed' },
-  { icon: Award, value: '12+', label: 'Years of Experience' },
-  { icon: Users, value: '30+', label: 'Expert Team' },
+  { icon: Share2, value: '200+', label: 'Events Executed' },
+  { icon: Award, value: '3+', label: 'Years of Experience' },
+  { icon: Users, value: '20+', label: 'Expert Team' },
   { icon: ShieldCheck, value: '100%', label: 'Client Satisfaction' },
 ];
 

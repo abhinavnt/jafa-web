@@ -8,6 +8,7 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -24,7 +25,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     checkUser();
   }, [router, supabase]);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = async () => {
     await supabase.auth.signOut();
     router.push('/admin/login');
   };
@@ -37,7 +42,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // (This layout is applied via layout.tsx, but we can structure it carefully)
 
   return (
-    <div className="h-screen bg-[#F8F2EA] flex flex-col">
+    <div className="h-screen bg-[#F8F2EA] flex flex-col relative">
       {/* Top Navbar */}
       <div className="h-16 bg-[#1A110D] text-white px-6 flex justify-between items-center shrink-0 border-b border-white/10 relative z-10">
         <h1 className="font-lora text-xl tracking-wide">JAFA <span className="text-[#8C7A6B]">Admin</span></h1>
@@ -62,6 +67,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {children}
         </div>
       </div>
+
+      {/* Custom Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl p-6 md:p-8 max-w-sm w-full mx-4 border border-[#DCD0C3]">
+            <h3 className="text-xl font-bold text-[#2A1A12] mb-2">Confirm Logout</h3>
+            <p className="text-[#5C3D2E] text-sm mb-8">
+              Are you sure you want to log out of the admin panel?
+            </p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setShowLogoutModal(false)}
+                className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-[#2A1A12] bg-[#F8F2EA] hover:bg-[#EBE2D5] transition-colors"
+              >
+                CANCEL
+              </button>
+              <button 
+                onClick={confirmLogout}
+                className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-white bg-[#8B3A2B] hover:bg-[#6A2A1F] transition-colors"
+              >
+                LOGOUT
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

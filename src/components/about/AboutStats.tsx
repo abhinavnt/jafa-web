@@ -5,22 +5,22 @@ export default function AboutStats() {
   const stats = [
     {
       icon: Gift,
-      value: '4+',
+      value: '7+',
       label: 'Years of Trust',
     },
     {
       icon: Package,
-      value: '70+',
+      value: '250+',
       label: 'Premium Products',
     },
     {
       icon: Users,
-      value: '1K+',
+      value: '5K+',
       label: 'Happy Customers',
     },
     {
       icon: PartyPopper,
-      value: '100+',
+      value: '200+',
       label: 'Events Delivered',
     },
     {

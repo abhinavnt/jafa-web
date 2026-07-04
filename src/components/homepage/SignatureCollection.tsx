@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product } from './ProductCard';
 
@@ -8,23 +9,12 @@ interface SignatureCollectionProps {
   products: Product[];
 }
 
-export default function SignatureCollection({ products }: SignatureCollectionProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const CardContent = ({ product }: { product: Product }) => {
+  const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
+  const displayPrice = hasVariants ? Math.min(...product.variants!.map(v => v.price)) : (product.price || 0);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % products.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
-  };
-
-  const CardContent = ({ product }: { product: Product }) => {
-    const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
-    const displayPrice = hasVariants ? Math.min(...product.variants!.map(v => v.price)) : (product.price || 0);
-
-    return (
-    <div className="flex flex-row items-stretch bg-[#EAE2D8] border border-[#DCD0C3] rounded-xl overflow-hidden h-full shadow-sm hover:shadow-md transition-shadow group">
+  return (
+    <Link href={`/dates-nuts/${product.id}`} className="flex flex-row items-stretch bg-[#EAE2D8] border border-[#DCD0C3] rounded-xl overflow-hidden h-full shadow-sm hover:shadow-md transition-shadow group">
       {/* Content Side */}
       <div className="w-[55%] p-4 xl:p-6 flex flex-col justify-center">
         <div className="text-[8px] xl:text-[9px] font-bold tracking-[0.2em] text-[#9A7B56] uppercase mb-1 xl:mb-2">
@@ -40,9 +30,9 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
           <span className="font-lora text-[#2A1A12] font-semibold text-sm xl:text-base">
             {hasVariants ? 'From ' : ''}₹{displayPrice.toLocaleString('en-IN')}
           </span>
-          <button className="text-[8px] xl:text-[9px] font-bold tracking-widest text-[#2A1A12] uppercase flex items-center gap-1 border border-[#2A1A12] px-2.5 py-1.5 rounded bg-transparent hover:bg-[#2A1A12] hover:text-white transition-colors">
+          <span className="text-[8px] xl:text-[9px] font-bold tracking-widest text-[#2A1A12] uppercase flex items-center gap-1 border border-[#2A1A12] px-2.5 py-1.5 rounded bg-transparent group-hover:bg-[#2A1A12] group-hover:text-white transition-colors">
             SHOP NOW <ArrowRight size={10} />
-          </button>
+          </span>
         </div>
       </div>
       {/* Image Side */}
@@ -55,8 +45,19 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
       </div>
-    </div>
-    );
+    </Link>
+  );
+};
+
+export default function SignatureCollection({ products }: SignatureCollectionProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % products.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
   };
 
   return (

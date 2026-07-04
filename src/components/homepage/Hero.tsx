@@ -31,7 +31,7 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 lg:gap-6 mt-6 md:mt-8 lg:mt-10">
-            <a href="#collection" className="bg-[#2A140C] text-white px-5 py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-4 rounded-full flex items-center gap-2 text-[10px] md:text-xs lg:text-sm font-semibold tracking-wide animate-subtle-bounce">
+            <a href="#collection" className="bg-[#2A140C] hover:bg-[#1A0C07] text-white px-5 py-2.5 md:px-6 md:py-3 lg:px-8 lg:py-4 rounded-full flex items-center gap-2 text-[10px] md:text-xs lg:text-sm font-semibold tracking-wide animate-subtle-bounce transition-colors duration-300">
               EXPLORE COLLECTION
               <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 lg:w-[18px] lg:h-[18px]" />
             </a>

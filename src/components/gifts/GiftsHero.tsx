@@ -1,13 +1,18 @@
 import React from 'react';
 import Image from 'next/image';
-import { Search } from 'lucide-react';
+import SearchWithSuggestions from '../SearchWithSuggestions';
 
-interface GiftsHeroProps {
-  searchQuery: string;
-  setSearchQuery: (val: string) => void;
+interface SearchItem {
+  title: string;
+  category?: string;
 }
 
-export default function GiftsHero({ searchQuery, setSearchQuery }: GiftsHeroProps) {
+interface GiftsHeroProps {
+  onSearchSubmit: (query: string) => void;
+  items: SearchItem[];
+}
+
+export default function GiftsHero({ onSearchSubmit, items }: GiftsHeroProps) {
   return (
     <div className="w-full relative overflow-hidden min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex items-center bg-[#FDF9F4]">
 
@@ -50,22 +55,14 @@ export default function GiftsHero({ searchQuery, setSearchQuery }: GiftsHeroProp
             From luxurious hampers to elegant keepsakes, find the perfect gift for every celebration.
           </p>
 
-          {/* Search Bar */}
-          <form onSubmit={(e) => e.preventDefault()} className="flex items-center w-full max-w-[480px] bg-[#EAE1D6] rounded-full p-1.5 md:p-2 mb-10 md:mb-14 border border-[#DCD0C3] focus-within:border-[#B89B82] transition-colors shadow-sm">
-            <div className="pl-3 md:pl-4 text-[#8C7A6B]">
-              <Search size={18} />
-            </div>
-            <input
-              type="text"
+          {/* Search Bar with Suggestions */}
+          <div className="mb-10 md:mb-14">
+            <SearchWithSuggestions
+              items={items}
               placeholder="Search gifts, hampers or keepsakes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent border-none outline-none px-3 md:px-4 text-[12px] md:text-sm text-[#2A1A12] placeholder:text-[#8C7A6B]"
+              onSubmit={onSearchSubmit}
             />
-            <button type="submit" className="bg-[#2A1A12] text-[#F8F2EA] px-6 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-[12px] font-bold tracking-wider hover:bg-[#4A2C11] transition-colors shrink-0">
-              SEARCH
-            </button>
-          </form>
+          </div>
         </div>
       </div>
 

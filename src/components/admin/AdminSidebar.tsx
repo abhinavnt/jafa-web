@@ -8,7 +8,6 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Overview', path: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Home Page Categories', path: '/admin/dashboard/categories', icon: LayoutGrid },
     { name: 'Offer Pinning', path: '/admin/dashboard/offers', icon: Megaphone },
     { name: 'Testimonials', path: '/admin/dashboard/testimonials', icon: MessageSquareQuote },

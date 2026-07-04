@@ -1,6 +1,5 @@
 'use client';
-import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import EventsHero from './EventsHero';
 import EventsCategories from './EventsCategories';
 import EventsGallery from './EventsGallery';
@@ -17,18 +16,20 @@ export default function EventsClient({ events, categories }: EventsClientProps) 
   const [searchQuery, setSearchQuery] = useState('');
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  React.useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
-  // Auto-scroll to results when user searches
-  useEffect(() => {
-    if (debouncedSearch.trim().length > 0) {
-      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Only triggered on explicit submit
+  const handleSearchSubmit = useCallback((query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length > 0) {
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
-  }, [debouncedSearch]);
+  }, []);
+
+  // Search items for suggestions
+  const searchItems = useMemo(() => {
+    return events.map((e: any) => ({ title: e.title, category: e.category }));
+  }, [events]);
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
@@ -37,8 +38,8 @@ export default function EventsClient({ events, categories }: EventsClientProps) 
       filtered = filtered.filter(e => e.category === activeCategory);
     }
 
-    if (debouncedSearch) {
-      const lowerSearch = debouncedSearch.toLowerCase();
+    if (searchQuery) {
+      const lowerSearch = searchQuery.toLowerCase();
       filtered = filtered.filter(e => 
         e.title.toLowerCase().includes(lowerSearch) || 
         e.category.toLowerCase().includes(lowerSearch)
@@ -46,18 +47,18 @@ export default function EventsClient({ events, categories }: EventsClientProps) 
     }
 
     return filtered;
-  }, [events, activeCategory, debouncedSearch]);
+  }, [events, activeCategory, searchQuery]);
 
   const handleCategorySelect = (id: string) => {
     setActiveCategory(prev => prev === id ? 'All' : id);
     setSearchQuery('');
   };
 
-  const hasSearchFilter = debouncedSearch.length > 0;
+  const hasSearchFilter = searchQuery.length > 0;
 
   return (
     <>
-      <EventsHero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <EventsHero onSearchSubmit={handleSearchSubmit} items={searchItems} />
       
       {/* Scroll target for search results */}
       <div ref={resultsRef} />

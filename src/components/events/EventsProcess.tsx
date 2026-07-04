@@ -22,18 +22,19 @@ export default function EventsProcess() {
           {/* Connecting Line (Desktop only) */}
           <div className="hidden md:block absolute top-[40px] left-[10%] right-[10%] h-px bg-[#DCD0C3] -z-10"></div>
 
-          <div className="flex flex-col md:flex-row justify-between items-center gap-12 md:gap-4 relative z-10">
+          <div className="grid grid-cols-2 gap-8 md:flex md:flex-row md:justify-between md:gap-4 relative z-10">
             {steps.map((step, index) => {
               const Icon = step.icon;
+              const isLast = index === steps.length - 1;
               return (
-                <div key={index} className="flex flex-col items-center text-center w-full md:flex-1 group">
-                  <div className="w-20 h-20 bg-[#F8F2EA] rounded-full border border-[#DCD0C3] flex items-center justify-center text-[#B89B82] mb-4 group-hover:bg-[#2A1A12] group-hover:text-[#F8F2EA] group-hover:border-[#2A1A12] transition-colors shadow-sm">
-                    <Icon size={32} strokeWidth={1.5} />
+                <div key={index} className={`flex flex-col items-center text-center md:flex-1 group ${isLast ? 'col-span-2 md:col-span-1' : ''}`}>
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[#F8F2EA] rounded-full border border-[#DCD0C3] flex items-center justify-center text-[#B89B82] mb-3 md:mb-4 group-hover:bg-[#2A1A12] group-hover:text-[#F8F2EA] group-hover:border-[#2A1A12] transition-colors shadow-sm">
+                    <Icon size={28} strokeWidth={1.5} className="md:w-8 md:h-8" />
                   </div>
                   <p className="text-[#8B3A2B] text-[10px] md:text-[11px] font-bold tracking-widest mb-1">
                     {step.num}.
                   </p>
-                  <h4 className="text-[#2A1A12] text-[13px] md:text-[15px] font-bold">
+                  <h4 className="text-[#2A1A12] text-[12px] md:text-[15px] font-bold">
                     {step.title}
                   </h4>
                 </div>

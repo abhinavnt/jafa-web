@@ -34,6 +34,7 @@ export default function Navbar() {
               src="/images/logo-transparent.png" 
               alt="Jafa Logo" 
               fill
+              sizes="(max-width: 768px) 96px, (max-width: 1024px) 128px, 160px"
               className="object-contain" 
               priority 
             />
@@ -64,7 +65,7 @@ export default function Navbar() {
           href={getWhatsAppLink()}
           target="_blank"
           rel="noreferrer"
-          className="hidden lg:flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-full text-xs font-bold tracking-wider hover:bg-opacity-90 transition-all"
+          className="hidden lg:flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-full text-xs font-bold tracking-wider hover:bg-[#3A261D] hover:text-white transition-colors duration-300"
         >
           <MessageCircle size={16} />
           WHATSAPP ENQUIRY
@@ -78,7 +79,7 @@ export default function Navbar() {
         >
           {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
-
+ 
         {/* Mobile Menu Full-Screen Overlay */}
         <div 
           className={`fixed inset-0 bg-[#F8F2EA] z-50 flex flex-col items-center justify-center transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} lg:hidden`}
@@ -98,7 +99,7 @@ export default function Navbar() {
               href={getWhatsAppLink()}
               target="_blank"
               rel="noreferrer"
-              className="mt-8 flex items-center gap-2 bg-foreground text-background px-8 py-4 rounded-full text-sm font-bold tracking-wider"
+              className="mt-8 flex items-center gap-2 bg-foreground text-background px-8 py-4 rounded-full text-sm font-bold tracking-wider hover:bg-[#3A261D] hover:text-white transition-colors duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
               <MessageCircle size={18} />

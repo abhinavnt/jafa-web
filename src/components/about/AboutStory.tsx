@@ -27,7 +27,7 @@ export default function AboutStory() {
     {
       icon: Award,
       title: 'Built on Trust',
-      description: '4+ years of trust and growing strong.',
+      description: '7+ years of trust and growing strong.',
     },
   ];
 

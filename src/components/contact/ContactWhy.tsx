@@ -6,8 +6,8 @@ export default function ContactWhy() {
   const reasons = [
     {
       icon: ShieldCheck,
-      title: 'Trusted Since 2022',
-      desc: '5+ years of delivering quality & trust',
+      title: 'Trusted Since 2019',
+      desc: '7+ years of delivering quality & trust',
     },
     {
       icon: Gem,

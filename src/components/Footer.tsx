@@ -16,37 +16,45 @@ const YoutubeIcon = ({ size = 18 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
 );
 
+interface AccordionSectionProps {
+  title: string;
+  id: string;
+  children: React.ReactNode;
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+const AccordionSection = ({ title, id, children, isOpen, onToggle }: AccordionSectionProps) => (
+  <div className="flex flex-col border-b border-[#D4C3B3]/10 md:border-none w-full">
+    <button
+      onClick={onToggle}
+      className="flex items-center justify-between py-5 md:py-0 w-full md:cursor-default md:pointer-events-none text-left"
+    >
+      <h4 className="text-[12px] md:text-xs font-bold tracking-widest uppercase text-[#EBE2D5] md:text-[#D4C3B3]/60 md:mb-6">
+        {title}
+      </h4>
+      <div
+        className="md:hidden text-[#EBE2D5] transition-transform duration-300"
+        style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+      >
+        <ChevronsRight size={16} />
+      </div>
+    </button>
+    <div
+      className={`overflow-hidden transition-all duration-300 md:!max-h-none md:!opacity-100 ${isOpen ? 'max-h-[400px] opacity-100 mb-5' : 'max-h-0 opacity-0 md:mb-0'
+        }`}
+    >
+      {children}
+    </div>
+  </div>
+);
+
 export default function Footer() {
   const [openSection, setOpenSection] = useState<string | null>(null);
 
   const toggleSection = (section: string) => {
     setOpenSection(openSection === section ? null : section);
   };
-
-  const AccordionSection = ({ title, id, children }: { title: string, id: string, children: React.ReactNode }) => (
-    <div className="flex flex-col border-b border-[#D4C3B3]/10 md:border-none w-full">
-      <button
-        onClick={() => toggleSection(id)}
-        className="flex items-center justify-between py-5 md:py-0 w-full md:cursor-default md:pointer-events-none text-left"
-      >
-        <h4 className="text-[12px] md:text-xs font-bold tracking-widest uppercase text-[#EBE2D5] md:text-[#D4C3B3]/60 md:mb-6">
-          {title}
-        </h4>
-        <div
-          className="md:hidden text-[#EBE2D5] transition-transform duration-300"
-          style={{ transform: openSection === id ? 'rotate(90deg)' : 'rotate(0deg)' }}
-        >
-          <ChevronsRight size={16} />
-        </div>
-      </button>
-      <div
-        className={`overflow-hidden transition-all duration-300 md:!max-h-none md:!opacity-100 ${openSection === id ? 'max-h-[400px] opacity-100 mb-5' : 'max-h-0 opacity-0 md:mb-0'
-          }`}
-      >
-        {children}
-      </div>
-    </div>
-  );
 
   return (
     <footer className="w-full bg-[#2A140C] text-[#EBE2D5] pt-10 pb-8 md:py-16 px-6 md:px-8 rounded-t-[30px] md:rounded-t-[40px] mt-auto relative">
@@ -79,7 +87,12 @@ export default function Footer() {
         {/* Accordions / Grid Columns */}
         <div className="flex flex-col md:contents w-full">
           {/* Quick Links */}
-          <AccordionSection title="Quick Links" id="quick">
+          <AccordionSection 
+            title="Quick Links" 
+            id="quick"
+            isOpen={openSection === 'quick'}
+            onToggle={() => toggleSection('quick')}
+          >
             <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
               <Link href="/" className="hover:text-white transition-colors">Home</Link>
               <Link href="/dates-nuts" className="hover:text-white transition-colors">Dates & Nuts</Link>
@@ -91,7 +104,12 @@ export default function Footer() {
           </AccordionSection>
 
           {/* Our Services */}
-          <AccordionSection title="Our Services" id="services">
+          <AccordionSection 
+            title="Our Services" 
+            id="services"
+            isOpen={openSection === 'services'}
+            onToggle={() => toggleSection('services')}
+          >
             <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
               <Link href="/dates-nuts" className="hover:text-white transition-colors">All Dates</Link>
               <Link href="/dates-nuts" className="hover:text-white transition-colors">Nuts & Dry Fruits</Link>
@@ -103,7 +121,12 @@ export default function Footer() {
           </AccordionSection>
 
           {/* Contact Us */}
-          <AccordionSection title="Contact Us" id="contact">
+          <AccordionSection 
+            title="Contact Us" 
+            id="contact"
+            isOpen={openSection === 'contact'}
+            onToggle={() => toggleSection('contact')}
+          >
             <div className="flex flex-col gap-3 md:gap-4 text-[12px] md:text-sm mb-4 md:mb-8 text-[#D4C3B3] md:text-[#EBE2D5]">
               <div className="flex items-center gap-3">
                 <Phone size={16} className="shrink-0 opacity-80" />

@@ -44,3 +44,84 @@ button, a {
 .animate-subtle-bounce {
   animation: subtleBounce 3s infinite ease-in-out;
 }
+
+
+/* ── Intro Video Overlay ── */
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.intro-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Pop-back animation: scale down + fade out */
+@keyframes introPopBack {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    border-radius: 0;
+  }
+  40% {
+    transform: scale(0.92);
+    opacity: 1;
+    border-radius: 20px;
+  }
+  100% {
+    transform: scale(0.85);
+    opacity: 0;
+    border-radius: 32px;
+  }
+}
+
+.intro-popback {
+  animation: introPopBack 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+/* Skip button */
+.intro-skip-btn {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.intro-skip-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: scale(1.04);
+}
+
+.intro-skip-btn:active {
+  transform: scale(0.97);
+}
+
+/* Prevent body scroll while intro is playing */
+body:has(.intro-overlay) {
+  overflow: hidden;
+}

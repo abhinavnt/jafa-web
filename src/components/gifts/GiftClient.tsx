@@ -1,6 +1,5 @@
 'use client';
-import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import GiftsHero from './GiftsHero';
 import GiftCategories from './GiftCategories';
 import GiftFeatures from './GiftFeatures';
@@ -17,19 +16,20 @@ export default function GiftClient({ gifts, categories }: GiftClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  // Use debounce for search input
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  React.useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
-  // Auto-scroll to results when user searches
-  useEffect(() => {
-    if (debouncedSearch.trim().length > 0) {
-      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Only triggered on explicit submit
+  const handleSearchSubmit = useCallback((query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length > 0) {
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
-  }, [debouncedSearch]);
+  }, []);
+
+  // Search items for suggestions
+  const searchItems = useMemo(() => {
+    return gifts.map((g: any) => ({ title: g.title, category: g.category }));
+  }, [gifts]);
 
   // Filter products based on category and search
   const filteredProducts = useMemo(() => {
@@ -39,8 +39,8 @@ export default function GiftClient({ gifts, categories }: GiftClientProps) {
       filtered = filtered.filter(g => g.category === activeCategory);
     }
 
-    if (debouncedSearch) {
-      const lowerSearch = debouncedSearch.toLowerCase();
+    if (searchQuery) {
+      const lowerSearch = searchQuery.toLowerCase();
       filtered = filtered.filter(g => 
         g.title.toLowerCase().includes(lowerSearch) || 
         g.category.toLowerCase().includes(lowerSearch)
@@ -48,13 +48,13 @@ export default function GiftClient({ gifts, categories }: GiftClientProps) {
     }
 
     return filtered;
-  }, [gifts, activeCategory, debouncedSearch]);
+  }, [gifts, activeCategory, searchQuery]);
 
-  const hasSearchFilter = debouncedSearch.length > 0;
+  const hasSearchFilter = searchQuery.length > 0;
 
   return (
     <>
-      <GiftsHero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <GiftsHero onSearchSubmit={handleSearchSubmit} items={searchItems} />
       
       {/* Scroll target for search results */}
       <div ref={resultsRef} />
