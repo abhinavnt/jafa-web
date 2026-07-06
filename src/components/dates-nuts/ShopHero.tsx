@@ -19,7 +19,7 @@ export default function ShopHero({ onSearchSubmit, items }: ShopHeroProps) {
     <section className="w-full bg-[#F8F2EA] relative overflow-hidden">
       {/* Container for Left Content */}
       <div className="w-full max-w-7xl mx-auto px-4 lg:px-8 min-h-[400px] md:min-h-[500px] lg:min-h-[550px] flex items-center relative z-10">
-        <div className="w-full sm:w-[65%] md:w-[45%] lg:w-[45%] py-12 md:py-16 relative z-20">
+        <div className="w-full sm:w-[65%] md:w-[45%] lg:w-[45%] pt-32 pb-12 md:pt-40 md:pb-16 relative z-20">
 
           <div className="flex items-center gap-2 mb-3 md:mb-4">
             <div className="w-1.5 h-1.5 rotate-45 bg-[#B89B82]"></div>

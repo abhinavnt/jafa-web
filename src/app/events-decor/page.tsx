@@ -49,9 +49,7 @@ export default async function EventsDecorPage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
-      <div className="bg-[#EAE2D8] sticky top-0 z-[100] shadow-sm">
-        <Navbar />
-      </div>
+      <Navbar />
       <div className="flex-grow">
         <EventsClient events={events} categories={categories} />
       </div>

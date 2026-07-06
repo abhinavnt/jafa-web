@@ -7,7 +7,7 @@ export default function Hero() {
     <section className="w-full bg-[#F8F2EA] relative overflow-hidden">
       {/* Container for Left Content */}
       <div className="w-full max-w-7xl mx-auto px-4 lg:px-6 min-h-[500px] md:min-h-[600px] lg:min-h-[680px] flex items-center relative z-10">
-        <div className="w-full sm:w-[55%] md:w-[45%] lg:w-[35%] py-12 md:py-16 lg:py-0 relative z-20">
+        <div className="w-full sm:w-[55%] md:w-[45%] lg:w-[35%] pt-32 pb-12 md:pt-40 md:pb-16 lg:pt-40 lg:pb-0 -translate-y-16 md:-translate-y-20 lg:-translate-y-28 relative z-20">
           <p className="uppercase tracking-[0.2em] md:tracking-[0.3em] lg:tracking-[0.35em] text-[9px] md:text-[10px] lg:text-xs text-[#8A6A5B] font-medium mb-3 md:mb-4 lg:mb-6">
             TREASURED BY NATURE
           </p>

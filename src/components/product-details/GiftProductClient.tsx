@@ -38,7 +38,7 @@ export default function GiftProductClient({ product }: GiftProductClientProps) {
   const displayPrice = hasVariants ? product.variants![activeVariantIndex].price : product.price;
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-10">
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-24 pb-6 md:pt-32 md:pb-10">
       
       {/* Desktop Breadcrumbs */}
       <div className="hidden md:block">

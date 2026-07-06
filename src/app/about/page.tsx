@@ -15,11 +15,7 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
-      
-      {/* Navbar Container */}
-      <div className="w-full sticky top-0 z-[100] bg-[#F8F2EA]">
-        <Navbar />
-      </div>
+      <Navbar />
 
       {/* Page Content */}
       <div className="flex-grow">

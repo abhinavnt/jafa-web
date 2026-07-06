@@ -60,9 +60,7 @@ export default async function EventDetailsPage({ params }: EventPageProps) {
 
   return (
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
-      <div className="bg-[#EAE2D8]">
-        <Navbar />
-      </div>
+      <Navbar />
       <div className="flex-grow">
         <EventClient event={mappedEvent} />
       </div>

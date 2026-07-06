@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -8,7 +8,18 @@ import { getWhatsAppLink } from '@/lib/whatsapp';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { label: 'Home', href: '/' },
@@ -25,7 +36,13 @@ export default function Navbar() {
   };
 
   return (
-    <header className="w-full bg-white relative z-50 shadow-sm h-16 md:h-20 flex items-center">
+    <header
+      className={`navbar-glass fixed top-0 left-0 right-0 z-50 w-full h-16 md:h-20 flex items-center transition-all duration-500 ease-in-out ${
+        scrolled
+          ? 'navbar-glass--active'
+          : 'navbar-glass--top'
+      }`}
+    >
       <nav className="w-full px-4 md:px-8 flex items-center justify-between max-w-7xl mx-auto">
         {/* Logo */}
         <Link href="/" className="flex flex-col items-center justify-center relative z-[60] transition-transform hover:scale-105" onClick={() => setIsMenuOpen(false)}>
@@ -111,3 +128,4 @@ export default function Navbar() {
     </header>
   );
 }
+

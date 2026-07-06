@@ -10,7 +10,7 @@ export default function AboutHero() {
 
       {/* Text Content */}
       <div className="w-full max-w-7xl mx-auto px-4 lg:px-8 md:min-h-[600px] lg:min-h-[700px] flex items-center relative z-10">
-        <div className="w-full md:w-[55%] lg:w-[48%] py-10 md:py-20 flex flex-col">
+        <div className="w-full md:w-[55%] lg:w-[48%] pt-32 pb-10 md:pt-40 md:pb-20 flex flex-col">
           <p className="text-[#8C7A6B] text-[10px] md:text-[12px] font-bold tracking-widest uppercase mb-4 md:mb-6">
             ABOUT JAFA
           </p>

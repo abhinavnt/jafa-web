@@ -58,16 +58,17 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-[#2A140C] text-[#EBE2D5] pt-10 pb-8 md:py-16 px-6 md:px-8 rounded-t-[30px] md:rounded-t-[40px] mt-auto relative">
-      <div className="max-w-7xl mx-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-0 md:gap-12 relative z-10">
+      <div className="max-w-7xl mx-auto flex flex-col md:grid md:grid-cols-4 gap-0 md:gap-6 lg:gap-12 relative z-10">
 
         {/* Brand Column */}
-        <div className="lg:col-span-1 flex flex-col items-start mb-4 md:mb-0">
+        <div className="lg:col-span-1 flex flex-col items-center md:items-start mb-4 md:mb-0">
           <div className="flex flex-col mb-4 md:mb-6">
             <Image
               src="/images/white logo.png"
               alt="Jafa Logo"
               width={160}
               height={160}
+              style={{ height: 'auto' }}
               className="object-contain opacity-90 w-[120px] md:w-[160px] h-auto mix-blend-screen"
             />
           </div>
@@ -93,7 +94,7 @@ export default function Footer() {
             isOpen={openSection === 'quick'}
             onToggle={() => toggleSection('quick')}
           >
-            <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
+            <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-[11px] lg:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
               <Link href="/" className="hover:text-white transition-colors">Home</Link>
               <Link href="/dates-nuts" className="hover:text-white transition-colors">Dates & Nuts</Link>
               <Link href="/gifts" className="hover:text-white transition-colors">Gifts</Link>
@@ -102,7 +103,7 @@ export default function Footer() {
               <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
             </div>
           </AccordionSection>
-
+ 
           {/* Our Services */}
           <AccordionSection 
             title="Our Services" 
@@ -110,7 +111,7 @@ export default function Footer() {
             isOpen={openSection === 'services'}
             onToggle={() => toggleSection('services')}
           >
-            <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
+            <div className="flex flex-col gap-3 md:gap-3 text-[12px] md:text-[11px] lg:text-sm text-[#D4C3B3] md:text-[#EBE2D5]">
               <Link href="/dates-nuts" className="hover:text-white transition-colors">All Dates</Link>
               <Link href="/dates-nuts" className="hover:text-white transition-colors">Nuts & Dry Fruits</Link>
               <Link href="/gifts" className="hover:text-white transition-colors">Gift Hampers</Link>
@@ -119,7 +120,7 @@ export default function Footer() {
               <Link href="/dates-nuts" className="hover:text-white transition-colors">New Arrivals</Link>
             </div>
           </AccordionSection>
-
+ 
           {/* Contact Us */}
           <AccordionSection 
             title="Contact Us" 
@@ -127,7 +128,7 @@ export default function Footer() {
             isOpen={openSection === 'contact'}
             onToggle={() => toggleSection('contact')}
           >
-            <div className="flex flex-col gap-3 md:gap-4 text-[12px] md:text-sm mb-4 md:mb-8 text-[#D4C3B3] md:text-[#EBE2D5]">
+            <div className="flex flex-col gap-3 md:gap-4 text-[12px] md:text-[11px] lg:text-sm mb-4 md:mb-8 text-[#D4C3B3] md:text-[#EBE2D5]">
               <div className="flex items-center gap-3">
                 <Phone size={16} className="shrink-0 opacity-80" />
                 <span>09645446666</span>
@@ -138,12 +139,12 @@ export default function Footer() {
               </div>
               <div className="flex items-start gap-3 mt-1">
                 <MapPin size={16} className="shrink-0 mt-0.5 opacity-80" />
-                <span className="text-[10px] md:text-xs opacity-80 leading-relaxed">
+                <span className="text-[10px] md:text-[9px] lg:text-xs opacity-80 leading-relaxed">
                   Cheriya Kumbalam, Kuttiady,<br />Palery, Kerala 673508
                 </span>
               </div>
             </div>
-            <a href="#" className="flex items-center justify-center gap-2 border border-[#D4C3B3]/30 rounded-full py-2.5 px-5 text-[10px] md:text-xs font-bold tracking-wider hover:bg-[#D4C3B3]/10 transition-colors w-max text-[#EBE2D5]">
+            <a href="#" className="flex items-center justify-center gap-2 border border-[#D4C3B3]/30 rounded-full py-2.5 px-4 md:px-3 lg:px-5 text-[10px] md:text-[10px] lg:text-xs font-bold tracking-wider hover:bg-[#D4C3B3]/10 transition-colors w-full lg:w-max text-[#EBE2D5]">
               <MessageCircle size={14} className="md:w-4 md:h-4" />
               WHATSAPP ENQUIRY
             </a>

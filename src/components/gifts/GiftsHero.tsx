@@ -23,7 +23,6 @@ export default function GiftsHero({ onSearchSubmit, items }: GiftsHeroProps) {
           alt="Elegant gifts setup"
           fill
           priority
-          quality={100}
           unoptimized={true}
           className="object-cover object-right lg:object-center"
           sizes="100vw"
@@ -37,7 +36,7 @@ export default function GiftsHero({ onSearchSubmit, items }: GiftsHeroProps) {
       <div className="absolute inset-0 bg-gradient-to-r from-[#FDF9F4] via-[#FDF9F4]/80 to-transparent z-10 md:hidden"></div>
 
       {/* Content */}
-      <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-10 z-20 relative">
+      <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-10 pt-32 md:pt-40 z-20 relative">
         <div className="max-w-[480px]">
           <p className="text-[#4A3324] text-[9px] md:text-[11px] font-bold tracking-widest uppercase mb-4">
             THOUGHTFULLY CURATED

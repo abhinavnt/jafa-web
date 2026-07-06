@@ -43,7 +43,7 @@ export default function EventClient({ event }: EventClientProps) {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-24 pb-8 md:pt-32 md:pb-12 lg:pb-16">
       
       {/* Mobile Breadcrumbs */}
       <div className="md:hidden mb-6">

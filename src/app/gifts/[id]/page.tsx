@@ -61,9 +61,7 @@ export default async function GiftDetailsPage({ params }: GiftPageProps) {
 
   return (
     <main className="flex min-h-screen flex-col bg-[#F8F2EA]">
-      <div className="bg-[#EAE2D8]">
-        <Navbar />
-      </div>
+      <Navbar />
       <div className="flex-grow">
         <GiftProductClient product={mappedProduct} />
       </div>

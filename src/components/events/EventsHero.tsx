@@ -35,7 +35,7 @@ export default function EventsHero({ onSearchSubmit, items }: EventsHeroProps) {
 
       {/* Content */}
       <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 lg:px-10 z-20 relative">
-        <div className="w-full sm:w-[65%] md:w-[55%] lg:w-[50%] py-12 md:py-16">
+        <div className="w-full sm:w-[65%] md:w-[55%] lg:w-[50%] pt-32 pb-12 md:pt-40 md:pb-16">
           <p className="text-[#4A3324] text-[9px] md:text-[11px] font-bold tracking-widest uppercase mb-4">
             CRAFTING MEMORABLE MOMENTS
           </p>
