@@ -36,7 +36,7 @@ export default function CategoryPills({ categories, activeCategory, onSelectCate
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 relative group">
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 relative group">
       
       {/* Section Title */}
       <div className="flex items-center justify-center gap-3 mb-6 md:mb-10">
@@ -51,70 +51,64 @@ export default function CategoryPills({ categories, activeCategory, onSelectCate
         </div>
       </div>
 
-      <div className="relative w-full flex items-center">
-        {/* Left Arrow */}
-        <button 
-          onClick={() => scroll('left')}
-          className="absolute left-0 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#F8F2EA] border border-[#DCD0C3] flex items-center justify-center text-[#2A1A12] hover:bg-[#EBE2D5] transition-colors shadow-sm -ml-2 md:-ml-4 opacity-0 group-hover:opacity-100 disabled:opacity-0"
+      <div className="flex overflow-x-auto md:grid md:grid-cols-6 gap-3 md:gap-4 lg:gap-6 pb-4 md:pb-0 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        
+        {/* All Products Button */}
+        <button
+          onClick={(e) => {
+            onSelectCategory('All');
+            e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }}
+          className={`flex-shrink-0 w-[120px] md:w-auto snap-center flex flex-col items-center justify-center text-center p-4 md:p-6 rounded-2xl transition-all border ${
+            activeCategory === 'All' 
+              ? 'bg-[#EAE2D8] border-[#B89B82] shadow-sm scale-105' 
+              : 'bg-transparent border-[#DCD0C3] hover:bg-[#F8F2EA] hover:border-[#B89B82]'
+          }`}
         >
-          <ChevronLeft size={20} />
+          <div className={`mb-3 md:mb-4 flex items-center justify-center h-8 md:h-10 transition-colors ${activeCategory === 'All' ? 'text-[#8B3A2B]' : 'text-[#8C7A6B]'}`}>
+            <Star size={28} strokeWidth={1.5} className="md:w-8 md:h-8 lg:w-10 lg:h-10" />
+          </div>
+          <h3 className={`text-[10px] md:text-[12px] lg:text-[14px] font-bold leading-tight mb-1 ${activeCategory === 'All' ? 'text-[#8B3A2B]' : 'text-[#2A1A12]'}`}>
+            All Products
+          </h3>
+          <p className="text-[#8C7A6B] text-[8px] md:text-[10px] lg:text-[11px] leading-tight hidden md:block">
+            Explore everything
+          </p>
         </button>
 
-        {/* Scrollable Pills */}
-        <div 
-          ref={scrollRef}
-          className="flex overflow-x-auto gap-3 md:gap-6 pb-4 pt-2 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] w-full px-8 md:px-12"
-        >
-          <button 
-            onClick={(e) => handleCategoryClick('All', e)}
-            className={`flex items-center gap-3 lg:gap-4 snap-center shrink-0 transition-all px-3 py-2 md:px-4 md:py-2.5 lg:py-3 rounded-full border ${
-              activeCategory === 'All' 
-                ? 'bg-[#EBE2D5] border-[#B89B82] shadow-sm scale-105' 
-                : 'bg-transparent border-transparent hover:bg-[#EAE1D6]'
-            }`}
-          >
-            <div className={`w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center font-lora font-bold border transition-colors ${activeCategory === 'All' ? 'bg-[#F8F2EA] border-[#B89B82] text-[#8B3A2B]' : 'bg-[#EAE1D6] border-[#DCD0C3] text-[#2A1A12]'}`}>
-              All
-            </div>
-            <div className="text-left flex flex-col">
-              <span className={`text-[12px] md:text-[15px] lg:text-[18px] font-bold transition-colors ${activeCategory === 'All' ? 'text-[#8B3A2B]' : 'text-[#2A1A12]'}`}>All Products</span>
-              <span className="text-[9px] md:text-[11px] lg:text-[13px] text-[#5C3D2E]">Explore everything</span>
-            </div>
-          </button>
-
-          {categories.map((category) => {
-            const IconComp = category.iconName && IconMap[category.iconName] ? IconMap[category.iconName] : Star;
-            return (
-              <button 
-                key={category.id}
-                onClick={(e) => handleCategoryClick(category.id, e)}
-                className={`flex items-center gap-3 lg:gap-4 snap-center shrink-0 transition-all px-3 py-2 md:px-4 md:py-2.5 lg:py-3 rounded-full border ${
-                  activeCategory === category.id 
-                    ? 'bg-[#EBE2D5] border-[#B89B82] shadow-sm scale-105' 
-                    : 'bg-transparent border-transparent hover:bg-[#EAE1D6]'
-                }`}
-              >
-                <div className={`relative w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center shrink-0 border transition-colors ${activeCategory === category.id ? 'border-[#B89B82] ring-2 ring-[#F8F2EA] bg-[#EAE2D8] text-[#8B3A2B]' : 'border-[#DCD0C3] bg-[#F8F2EA] text-[#8C7A6B]'}`}>
-                  <IconComp size={28} className="md:w-8 md:h-8 lg:w-10 lg:h-10" strokeWidth={1.5} />
-                </div>
-                <div className="text-left flex flex-col">
-                  <span className={`text-[12px] md:text-[15px] lg:text-[18px] font-bold transition-colors ${activeCategory === category.id ? 'text-[#8B3A2B]' : 'text-[#2A1A12]'}`}>{category.title}</span>
-                  {category.subtitle && <span className="text-[9px] md:text-[11px] lg:text-[13px] text-[#5C3D2E]">{category.subtitle}</span>}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Right Arrow */}
-        <button 
-          onClick={() => scroll('right')}
-          className="absolute right-0 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#F8F2EA] border border-[#DCD0C3] flex items-center justify-center text-[#2A1A12] hover:bg-[#EBE2D5] transition-colors shadow-sm -mr-2 md:-mr-4 opacity-0 group-hover:opacity-100 disabled:opacity-0"
-        >
-          <ChevronRight size={20} />
-        </button>
+        {/* Category Buttons */}
+        {categories.map((category) => {
+          const isActive = activeCategory === category.id;
+          const IconComp = category.iconName && IconMap[category.iconName] ? IconMap[category.iconName] : Star;
+          
+          return (
+            <button
+              key={category.id}
+              onClick={(e) => {
+                onSelectCategory(category.id);
+                e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+              }}
+              className={`flex-shrink-0 w-[120px] md:w-auto snap-center flex flex-col items-center justify-center text-center p-4 md:p-6 rounded-2xl transition-all border ${
+                isActive 
+                  ? 'bg-[#EAE2D8] border-[#B89B82] shadow-sm scale-105' 
+                  : 'bg-transparent border-[#DCD0C3] hover:bg-[#F8F2EA] hover:border-[#B89B82]'
+              }`}
+            >
+              <div className={`mb-3 md:mb-4 flex items-center justify-center h-8 md:h-10 transition-colors ${isActive ? 'text-[#8B3A2B]' : 'text-[#8C7A6B]'}`}>
+                <IconComp size={28} strokeWidth={1.5} className="md:w-8 md:h-8 lg:w-10 lg:h-10" />
+              </div>
+              <h3 className={`text-[10px] md:text-[12px] lg:text-[14px] font-bold leading-tight mb-1 ${isActive ? 'text-[#8B3A2B]' : 'text-[#2A1A12]'}`}>
+                {category.title}
+              </h3>
+              {category.subtitle && (
+                <p className="text-[#8C7A6B] text-[8px] md:text-[10px] lg:text-[11px] leading-tight hidden md:block">
+                  {category.subtitle}
+                </p>
+              )}
+            </button>
+          );
+        })}
       </div>
-
     </div>
   );
 }

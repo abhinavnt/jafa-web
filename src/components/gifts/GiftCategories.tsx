@@ -19,7 +19,7 @@ interface GiftCategoriesProps {
 export default function GiftCategories({ activeCategory, onSelectCategory, categories }: GiftCategoriesProps) {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4 lg:gap-6">
+      <div className="flex overflow-x-auto md:grid md:grid-cols-6 gap-3 md:gap-4 lg:gap-6 pb-4 md:pb-0 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {categories.map((category) => {
           const isActive = activeCategory === category.id;
           const IconComp = category.iconName && IconMap[category.iconName] ? IconMap[category.iconName] : Gift;
@@ -28,7 +28,7 @@ export default function GiftCategories({ activeCategory, onSelectCategory, categ
             <button
               key={category.id}
               onClick={() => onSelectCategory(category.id)}
-              className={`flex flex-col items-center justify-center text-center p-4 md:p-6 rounded-2xl transition-all border ${
+              className={`flex-shrink-0 w-[120px] md:w-auto snap-center flex flex-col items-center justify-center text-center p-4 md:p-6 rounded-2xl transition-all border ${
                 isActive 
                   ? 'bg-[#EAE2D8] border-[#B89B82] shadow-sm scale-105' 
                   : 'bg-transparent border-[#DCD0C3] hover:bg-[#F8F2EA] hover:border-[#B89B82]'
