@@ -9,6 +9,8 @@ export const metadata = {
   description: 'Nature\'s finest dates, nuts & dry fruits handcrafted for your health and happiness.',
 };
 
+export const revalidate = 60;
+
 export default async function DatesAndNutsPage() {
   const supabase = createPublicClient();
   const { data: products } = await supabase

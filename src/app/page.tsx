@@ -10,6 +10,8 @@ import Testimonials from "@/components/homepage/Testimonials";
 import { createPublicClient } from "@/lib/supabase";
 import { testimonialsData } from "@/lib/mockData";
 
+export const revalidate = 60;
+
 export default async function Home() {
   const supabase = createPublicClient();
   

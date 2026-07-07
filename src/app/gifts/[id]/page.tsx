@@ -30,6 +30,8 @@ export async function generateMetadata({ params }: GiftPageProps) {
   };
 }
 
+export const revalidate = 60;
+
 export default async function GiftDetailsPage({ params }: GiftPageProps) {
   const resolvedParams = await params;
   const supabase = createPublicClient();

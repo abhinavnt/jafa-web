@@ -28,6 +28,8 @@ export async function generateMetadata({ params }: EventPageProps) {
   };
 }
 
+export const revalidate = 60;
+
 export default async function EventDetailsPage({ params }: EventPageProps) {
   const resolvedParams = await params;
   const supabase = createPublicClient();

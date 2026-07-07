@@ -11,6 +11,8 @@ export const metadata = {
   description: 'From intimate celebrations to grand events, we design with passion and perfection to create unforgettable experiences.',
 };
 
+export const revalidate = 60;
+
 export default async function EventsDecorPage() {
   try {
     const targetPath = path.join(process.cwd(), 'public', 'images', 'events-hero.jpg');
