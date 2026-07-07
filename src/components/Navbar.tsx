@@ -36,7 +36,8 @@ export default function Navbar() {
   };
 
   return (
-    <header
+    <>
+      <header
       className={`navbar-glass fixed top-0 left-0 right-0 z-50 w-full h-20 md:h-24 lg:h-28 flex items-center transition-all duration-500 ease-in-out ${
         scrolled
           ? 'navbar-glass--active'
@@ -96,35 +97,38 @@ export default function Navbar() {
           {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
  
-        {/* Mobile Menu Full-Screen Overlay */}
-        <div 
-          className={`fixed inset-0 bg-[#F8F2EA] z-50 flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} lg:hidden`}
-        >
-          <div className="flex flex-col items-center my-auto py-24 space-y-6 text-xl font-medium tracking-wide text-foreground w-full px-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setIsMenuOpen(false)}
-                className={isActive(link.href) ? 'font-bold' : 'opacity-80 hover:opacity-100'}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <a
-              href={getWhatsAppLink()}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-8 flex items-center gap-2 bg-foreground text-background px-8 py-4 rounded-full text-sm font-bold tracking-wider hover:bg-[#3A261D] hover:text-white transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <MessageCircle size={18} />
-              WHATSAPP ENQUIRY
-            </a>
-          </div>
-        </div>
+
       </nav>
     </header>
+
+    {/* Mobile Menu Full-Screen Overlay */}
+    <div 
+      className={`fixed inset-0 bg-[#F8F2EA] z-40 flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} lg:hidden`}
+    >
+      <div className="flex flex-col items-center my-auto pt-32 pb-24 space-y-6 text-xl font-medium tracking-wide text-foreground w-full px-4">
+        {navLinks.map((link) => (
+          <Link
+            key={link.label}
+            href={link.href}
+            onClick={() => setIsMenuOpen(false)}
+            className={isActive(link.href) ? 'font-bold' : 'opacity-80 hover:opacity-100'}
+          >
+            {link.label}
+          </Link>
+        ))}
+        <a
+          href={getWhatsAppLink()}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-8 flex items-center gap-2 bg-foreground text-background px-8 py-4 rounded-full text-sm font-bold tracking-wider hover:bg-[#3A261D] hover:text-white transition-colors duration-300"
+          onClick={() => setIsMenuOpen(false)}
+        >
+          <MessageCircle size={18} />
+          WHATSAPP ENQUIRY
+        </a>
+      </div>
+    </div>
+    </>
   );
 }
 
