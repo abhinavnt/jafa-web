@@ -518,8 +518,8 @@ export default function DatesNutsAdmin() {
                 {formData.variants.length === 0 && (
                   <>
                     <div className="col-span-2 sm:col-span-1">
-                      <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Base Price (₹) *</label>
-                      <input type="number" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required />
+                      <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Base Price (₹)</label>
+                      <input type="number" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
                     </div>
 
                     <div className="col-span-2 sm:col-span-1">

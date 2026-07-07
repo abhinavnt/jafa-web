@@ -40,12 +40,14 @@ export default function ProductCard({ product, variant = 'signature' }: ProductC
       )}
       
       <div className="flex items-center gap-2 mb-6 mt-auto">
-        <span className="text-lg font-bold">₹{product.price.toLocaleString('en-IN')}</span>
-        {product.originalPrice && (
+        {product.price > 0 && (
+          <span className="text-lg font-bold">₹{product.price.toLocaleString('en-IN')}</span>
+        )}
+        {product.originalPrice && product.originalPrice > 0 ? (
           <span className="text-sm text-foreground/50 line-through">
             ₹{product.originalPrice.toLocaleString('en-IN')}
           </span>
-        )}
+        ) : null}
       </div>
       
       <button className="flex items-center gap-2 text-xs font-bold tracking-widest text-foreground hover:opacity-70 transition-opacity border border-foreground/20 px-4 py-2 rounded-full self-start">

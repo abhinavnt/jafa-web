@@ -77,23 +77,27 @@ export default function ProductClient({ product }: ProductClientProps) {
             </div>
           )}
 
-          <div className="mb-6">
-            <div className="flex items-end gap-3 md:gap-4 mb-2">
-              <span className={`text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-none ${isOutOfStock ? 'text-[#8C7A6B]' : 'text-[#8B3A2B]'}`}>
-                ₹{(displayPrice || 0).toLocaleString('en-IN')}
-              </span>
-              {product.originalPrice && !hasVariants && (
-                <span className="text-[#8C7A6B] text-[16px] md:text-[18px] line-through decoration-[#8C7A6B]/50 leading-none mb-1">
-                  ₹{product.originalPrice.toLocaleString('en-IN')}
-                </span>
-              )}
+          {((displayPrice && displayPrice > 0) || (product.originalPrice && product.originalPrice > 0)) ? (
+            <div className="mb-6">
+              <div className="flex items-end gap-3 md:gap-4 mb-2">
+                {displayPrice && displayPrice > 0 ? (
+                  <span className={`text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-none ${isOutOfStock ? 'text-[#8C7A6B]' : 'text-[#8B3A2B]'}`}>
+                    ₹{displayPrice.toLocaleString('en-IN')}
+                  </span>
+                ) : null}
+                {product.originalPrice && product.originalPrice > 0 && !hasVariants ? (
+                  <span className="text-[#8C7A6B] text-[16px] md:text-[18px] line-through decoration-[#8C7A6B]/50 leading-none mb-1">
+                    ₹{product.originalPrice.toLocaleString('en-IN')}
+                  </span>
+                ) : null}
+              </div>
+              {product.originalPrice && product.originalPrice > 0 && !hasVariants && !isOutOfStock && displayPrice && displayPrice > 0 ? (
+                <p className="text-[#8B3A2B] text-[11px] md:text-[12px] font-bold uppercase tracking-wider mt-2">
+                  Save ₹{(product.originalPrice - displayPrice).toLocaleString('en-IN')}
+                </p>
+              ) : null}
             </div>
-            {product.originalPrice && !hasVariants && !isOutOfStock && (
-              <p className="text-[#8B3A2B] text-[11px] md:text-[12px] font-bold uppercase tracking-wider mt-2">
-                Save ₹{(product.originalPrice - (product.price || 0)).toLocaleString('en-IN')}
-              </p>
-            )}
-          </div>
+          ) : null}
 
           {hasVariants && (
             <SizeSelector 

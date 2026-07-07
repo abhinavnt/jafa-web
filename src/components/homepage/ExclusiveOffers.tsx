@@ -97,14 +97,16 @@ export default function ExclusiveOffers({ products }: ExclusiveOffersProps) {
                     </h4>
                     
                     <div className="mt-auto flex items-center gap-2">
-                      <span className="font-bold text-[#8B3A2B] text-[12px] md:text-[14px]">
-                        {hasVariants ? 'From ' : ''}₹{displayPrice.toLocaleString('en-IN')}
-                      </span>
-                      {product.originalPrice && !hasVariants && (
+                      {displayPrice > 0 && (
+                        <span className="font-bold text-[#8B3A2B] text-[12px] md:text-[14px]">
+                          {hasVariants ? 'From ' : ''}₹{displayPrice.toLocaleString('en-IN')}
+                        </span>
+                      )}
+                      {product.originalPrice && product.originalPrice > 0 && !hasVariants ? (
                         <span className="text-[10px] md:text-[11px] text-[#8C7A6B] line-through font-medium">
                           ₹{product.originalPrice.toLocaleString('en-IN')}
                         </span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
 

@@ -37,9 +37,11 @@ export default function SizeSelector({ variants, activeVariantIndex, onSelectVar
               <span className={`text-[12px] md:text-[13px] font-bold mb-1 ${isActive ? 'text-[#8B3A2B]' : 'text-[#5C3D2E]'}`}>
                 {variant.name}
               </span>
-              <span className={`text-[13px] md:text-[14px] lg:text-[15px] font-medium ${isActive ? 'text-[#2A1A12]' : 'text-[#8C7A6B]'}`}>
-                ₹{variant.price.toLocaleString('en-IN')}
-              </span>
+              {variant.price && variant.price > 0 ? (
+                <span className={`text-[13px] md:text-[14px] lg:text-[15px] font-medium ${isActive ? 'text-[#2A1A12]' : 'text-[#8C7A6B]'}`}>
+                  ₹{variant.price.toLocaleString('en-IN')}
+                </span>
+              ) : null}
             </button>
           );
         })}

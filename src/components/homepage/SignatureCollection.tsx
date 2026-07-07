@@ -28,7 +28,7 @@ const CardContent = ({ product }: { product: Product }) => {
         </p>
         <div className="mt-auto flex items-center justify-between">
           <span className="font-lora text-[#2A1A12] font-semibold text-sm xl:text-base">
-            {hasVariants ? 'From ' : ''}₹{displayPrice.toLocaleString('en-IN')}
+            {displayPrice > 0 ? `${hasVariants ? 'From ' : ''}₹${displayPrice.toLocaleString('en-IN')}` : ''}
           </span>
           <span className="text-[8px] xl:text-[9px] font-bold tracking-widest text-[#2A1A12] uppercase flex items-center gap-1 border border-[#2A1A12] px-2.5 py-1.5 rounded bg-transparent group-hover:bg-[#2A1A12] group-hover:text-white transition-colors">
             SHOP NOW <ArrowRight size={10} />

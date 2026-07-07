@@ -68,23 +68,20 @@ export default function ProductCard({ product, basePath = '/dates-nuts' }: Produ
         </h4>
         
         <div className="flex flex-wrap items-center gap-1.5 mb-auto">
-          <span className="font-bold text-[#8B3A2B] text-[11px] md:text-[13px]">
-            {hasVariants ? 'From ' : ''}₹{(displayPrice || 0).toLocaleString('en-IN')}
-          </span>
-          {product.originalPrice && !hasVariants && (
+          {displayPrice > 0 && (
+            <span className="font-bold text-[#8B3A2B] text-[11px] md:text-[13px]">
+              {hasVariants ? 'From ' : ''}₹{displayPrice.toLocaleString('en-IN')}
+            </span>
+          )}
+          {product.originalPrice && product.originalPrice > 0 && !hasVariants ? (
             <span className="text-[9px] md:text-[10px] text-[#8C7A6B] line-through font-medium">
               ₹{product.originalPrice.toLocaleString('en-IN')}
             </span>
-          )}
+          ) : null}
         </div>
 
         <div className="flex items-center justify-between border-t border-[#DCD0C3] pt-2 mt-1">
-          <div className="flex items-center gap-1">
-            <Star className="fill-[#C88A3A] text-[#C88A3A] w-[10px] h-[10px] md:w-3 md:h-3" />
-            <span className="text-[#2A1A12] text-[9px] md:text-[10px] font-bold leading-none mt-0.5">
-              {product.rating} <span className="text-[#8C7A6B] font-medium">({product.reviews})</span>
-            </span>
-          </div>
+          <div></div>
           
           <button className="flex items-center gap-0.5 text-[7px] md:text-[8px] font-bold tracking-wider text-[#2A1A12] hover:text-[#8B3A2B] transition-colors uppercase leading-none mt-0.5">
             VIEW DETAILS <ArrowRight size={8} strokeWidth={2.5} className="md:w-[10px] md:h-[10px]" />
