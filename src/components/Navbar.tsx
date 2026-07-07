@@ -98,9 +98,9 @@ export default function Navbar() {
  
         {/* Mobile Menu Full-Screen Overlay */}
         <div 
-          className={`fixed inset-0 bg-[#F8F2EA] z-50 flex flex-col items-center justify-center transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} lg:hidden`}
+          className={`fixed inset-0 bg-[#F8F2EA] z-50 flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} lg:hidden`}
         >
-          <div className="flex flex-col items-center space-y-6 text-xl font-medium tracking-wide text-foreground">
+          <div className="flex flex-col items-center my-auto py-24 space-y-6 text-xl font-medium tracking-wide text-foreground w-full px-4">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
