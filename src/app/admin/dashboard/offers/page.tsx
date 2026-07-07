@@ -67,7 +67,7 @@ export default function OffersAdmin() {
     
     const localDate = new Date(offer.end_date);
     const tzOffset = localDate.getTimezoneOffset() * 60000;
-    const localISOTime = (new Date(localDate - tzOffset)).toISOString().slice(0, 16);
+    const localISOTime = (new Date(localDate.getTime() - tzOffset)).toISOString().slice(0, 16);
     setSpecificDate(localISOTime);
     
     setIsModalOpen(true);
