@@ -37,21 +37,20 @@ export default function Navbar() {
 
   return (
     <header
-      className={`navbar-glass fixed top-0 left-0 right-0 z-50 w-full h-16 md:h-20 flex items-center transition-all duration-500 ease-in-out ${
+      className={`navbar-glass fixed top-0 left-0 right-0 z-50 w-full h-20 md:h-24 lg:h-28 flex items-center transition-all duration-500 ease-in-out ${
         scrolled
           ? 'navbar-glass--active'
           : 'navbar-glass--top'
       }`}
     >
       <nav className="w-full px-4 md:px-8 flex items-center justify-between max-w-7xl mx-auto">
-        {/* Logo */}
-        <Link href="/" className="flex flex-col items-center justify-center relative z-[60] transition-transform hover:scale-105" onClick={() => setIsMenuOpen(false)}>
-          <div className="relative w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 -my-4 md:-my-6 lg:-my-10 lg:top-[1px]">
+        <Link href="/" className="flex flex-col items-center justify-center relative z-[60] transition-transform hover:scale-105 -ml-2 md:ml-0" onClick={() => setIsMenuOpen(false)}>
+          <div className="relative w-40 h-40 md:w-44 md:h-44 lg:w-52 lg:h-52 -my-10 lg:-my-12 top-1 md:top-2 lg:top-3">
             <Image 
               src="/images/logo-transparent.png" 
               alt="Jafa Logo" 
               fill
-              sizes="(max-width: 768px) 96px, (max-width: 1024px) 128px, 160px"
+              sizes="(max-width: 768px) 160px, (max-width: 1024px) 176px, 208px"
               className="object-contain" 
               priority 
             />
