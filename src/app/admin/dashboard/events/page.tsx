@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
-import { Plus, Trash2, Edit, X, CalendarHeart, FolderPlus, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, Edit, X, CalendarHeart, FolderPlus, Image as ImageIcon, Search } from 'lucide-react';
 import { deleteCloudinaryImage } from '@/app/actions/cloudinary';
 import { IconMap, availableIcons } from '@/lib/icons';
 
@@ -28,6 +28,17 @@ export default function EventsAdmin() {
   });
 
   const [categoryFormData, setCategoryFormData] = useState({ id: '', title: '', icon: '' });
+  const [isManageCategoriesOpen, setIsManageCategoriesOpen] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  
+  // Search State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [submittedSearchQuery, setSubmittedSearchQuery] = useState('');
+  
+  const [deleteConfirm, setDeleteConfirm] = useState<{isOpen: boolean, id: string, type: 'event' | 'category'}>({isOpen: false, id: '', type: 'event'});
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
+  const [categorySearchQuery, setCategorySearchQuery] = useState('');
   
   const supabase = createClient();
 
@@ -44,11 +55,16 @@ export default function EventsAdmin() {
     if (catData) setCategories(catData);
 
     // Fetch Events with Pagination
-    const { data, count, error } = await supabase
+    let query = supabase
       .from('events')
       .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE - 1);
+      .order('created_at', { ascending: false });
+
+    if (submittedSearchQuery) {
+      query = query.ilike('title', `%${submittedSearchQuery}%`);
+    }
+
+    const { data, count, error } = await query.range((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE - 1);
       
     if (data) setEvents(data);
     if (count !== null) setTotalCount(count);
@@ -57,7 +73,25 @@ export default function EventsAdmin() {
 
   useEffect(() => {
     fetchEventsAndCategories();
-  }, [page]);
+  }, [page, submittedSearchQuery]);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!searchQuery.trim()) {
+        setSuggestions([]);
+        return;
+      }
+      const { data } = await supabase
+        .from('events')
+        .select('*')
+        .ilike('title', `%${searchQuery}%`)
+        .limit(5);
+      if (data) setSuggestions(data);
+    };
+    
+    const timeoutId = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -164,10 +198,8 @@ export default function EventsAdmin() {
     }
   };
 
-  const handleCategoryDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category? Make sure no events are using it.')) return;
-    await supabase.from('product_categories').delete().eq('id', id);
-    fetchEventsAndCategories();
+  const handleCategoryDelete = (id: string) => {
+    setDeleteConfirm({ isOpen: true, id, type: 'category' });
   };
 
   const openCategoryEditModal = (category: any) => {
@@ -180,21 +212,30 @@ export default function EventsAdmin() {
     setIsCategoryModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this event from the portfolio?')) return;
-    
-    const eventToDelete = events.find(e => e.id === id);
-    const { error } = await supabase.from('events').delete().eq('id', id);
-    
-    if (!error && eventToDelete) {
-      if (eventToDelete.image) await deleteCloudinaryImage(eventToDelete.image);
-      if (eventToDelete.gallery_images) {
-        for (const img of eventToDelete.gallery_images) {
-          await deleteCloudinaryImage(img);
-        }
-      }
+  const handleDelete = (id: string) => {
+    setDeleteConfirm({ isOpen: true, id, type: 'event' });
+  };
+
+  const confirmDelete = async () => {
+    const { id, type } = deleteConfirm;
+    if (type === 'category') {
+      await supabase.from('product_categories').delete().eq('id', id);
       fetchEventsAndCategories();
+    } else {
+      const eventToDelete = events.find(e => e.id === id);
+      const { error } = await supabase.from('events').delete().eq('id', id);
+      
+      if (!error && eventToDelete) {
+        if (eventToDelete.image) await deleteCloudinaryImage(eventToDelete.image);
+        if (eventToDelete.gallery_images) {
+          for (const img of eventToDelete.gallery_images) {
+            await deleteCloudinaryImage(img);
+          }
+        }
+        fetchEventsAndCategories();
+      }
     }
+    setDeleteConfirm({ isOpen: false, id: '', type: 'event' });
   };
 
   const openEditModal = (eventItem: any) => {
@@ -221,7 +262,7 @@ export default function EventsAdmin() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
             <CalendarHeart size={24} className="text-[#8B3A2B]" />
@@ -232,16 +273,73 @@ export default function EventsAdmin() {
           </div>
         </div>
         
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+          <div className="relative w-full sm:w-64">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search size={16} className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search events..."
+              value={searchQuery}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchQuery(val);
+                if (val === '') {
+                  setSubmittedSearchQuery('');
+                  setPage(1);
+                  setIsSuggestionsOpen(false);
+                } else {
+                  setIsSuggestionsOpen(true);
+                }
+              }}
+              onFocus={() => setIsSuggestionsOpen(true)}
+              onBlur={() => setTimeout(() => setIsSuggestionsOpen(false), 200)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setSubmittedSearchQuery(searchQuery);
+                  setPage(1);
+                  setIsSuggestionsOpen(false);
+                }
+              }}
+              className="pl-10 pr-4 py-2 border border-[#DCD0C3] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8B3A2B] bg-white w-full sm:w-64"
+            />
+            {isSuggestionsOpen && suggestions.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-[#DCD0C3] rounded-lg shadow-lg overflow-hidden">
+                {suggestions.map((s) => (
+                  <div 
+                    key={s.id}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      setSearchQuery(s.title);
+                      setSubmittedSearchQuery(s.title);
+                      setPage(1);
+                      setIsSuggestionsOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-[#F8F2EA] cursor-pointer text-sm text-[#2A1A12] border-b border-gray-100 last:border-0"
+                  >
+                    <div className="font-medium">{s.title}</div>
+                    <div className="text-xs text-gray-500">{s.category}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <button 
+            onClick={() => setIsManageCategoriesOpen(true)}
+            className="bg-white border border-[#DCD0C3] text-[#5C3D2E] px-4 py-2.5 rounded font-bold uppercase tracking-wider text-xs hover:bg-[#F8F2EA] transition-colors flex items-center justify-center gap-2 w-full sm:w-48 whitespace-nowrap"
+          >
+            Manage Categories
+          </button>
           <button 
             onClick={openCategoryAddModal}
-            className="bg-white border border-[#DCD0C3] text-[#5C3D2E] px-5 py-2.5 rounded font-bold uppercase tracking-wider text-xs hover:bg-[#F8F2EA] transition-colors flex items-center gap-2"
+            className="bg-white border border-[#DCD0C3] text-[#5C3D2E] px-4 py-2.5 rounded font-bold uppercase tracking-wider text-xs hover:bg-[#F8F2EA] transition-colors flex items-center justify-center gap-2 w-full sm:w-48 whitespace-nowrap"
           >
             <FolderPlus size={16} /> Add Category
           </button>
           <button 
             onClick={openAddModal}
-            className="bg-[#2A1A12] text-white px-5 py-2.5 rounded font-bold uppercase tracking-wider text-xs hover:bg-[#4A2C11] transition-colors flex items-center gap-2"
+            className="bg-[#2A1A12] text-white px-4 py-2.5 rounded font-bold uppercase tracking-wider text-xs hover:bg-[#4A2C11] transition-colors flex items-center justify-center gap-2 w-full sm:w-48 whitespace-nowrap"
           >
             <Plus size={16} /> Add Event
           </button>
@@ -254,19 +352,26 @@ export default function EventsAdmin() {
             <thead>
               <tr className="bg-[#F8F2EA] border-b border-[#DCD0C3] text-[#5C3D2E] text-xs uppercase tracking-wider">
                 <th className="p-4 font-bold">Event Title</th>
-                <th className="p-4 font-bold">Category</th>
-                <th className="p-4 font-bold">Date Added</th>
+                <th className="p-4 font-bold hidden sm:table-cell">Category</th>
+                <th className="p-4 font-bold hidden sm:table-cell">Date Added</th>
                 <th className="p-4 font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#DCD0C3]">
               {loading ? (
-                <tr><td colSpan={4} className="p-8 text-center text-[#5C3D2E]">Loading events...</td></tr>
+                <tr>
+                  <td colSpan={2} className="p-8 text-center text-[#5C3D2E] sm:hidden">Loading events...</td>
+                  <td colSpan={4} className="p-8 text-center text-[#5C3D2E] hidden sm:table-cell">Loading events...</td>
+                </tr>
               ) : events.length === 0 ? (
-                <tr><td colSpan={4} className="p-8 text-center text-[#5C3D2E]">No events found.</td></tr>
+                <tr>
+                  <td colSpan={2} className="p-8 text-center text-[#5C3D2E] sm:hidden">No events found.</td>
+                  <td colSpan={4} className="p-8 text-center text-[#5C3D2E] hidden sm:table-cell">No events found.</td>
+                </tr>
               ) : (
                 events.map((e) => (
-                  <tr key={e.id} className="hover:bg-[#F8F2EA]/50 transition-colors">
+                  <React.Fragment key={e.id}>
+                  <tr className="hover:bg-[#F8F2EA]/50 transition-colors cursor-pointer" onClick={() => setExpandedId(expandedId === e.id ? null : e.id)}>
                     <td className="p-4">
                       <div className="flex items-center gap-4">
                         {e.image ? (
@@ -277,17 +382,28 @@ export default function EventsAdmin() {
                         <span className="font-medium text-[#2A1A12]">{e.title}</span>
                       </div>
                     </td>
-                    <td className="p-4 text-[#5C3D2E] text-sm">{e.category}</td>
-                    <td className="p-4 text-[#5C3D2E] text-sm">{new Date(e.created_at).toLocaleDateString()}</td>
+                    <td className="p-4 text-[#5C3D2E] text-sm hidden sm:table-cell">{e.category}</td>
+                    <td className="p-4 text-[#5C3D2E] text-sm hidden sm:table-cell">{new Date(e.created_at).toLocaleDateString()}</td>
                     <td className="p-4 text-right">
-                      <button onClick={() => openEditModal(e)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors mr-1">
+                      <button onClick={(event) => { event.stopPropagation(); openEditModal(e); }} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors mr-1">
                         <Edit size={16} />
                       </button>
-                      <button onClick={() => handleDelete(e.id)} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors">
+                      <button onClick={(event) => { event.stopPropagation(); handleDelete(e.id); }} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors ml-2">
                         <Trash2 size={16} />
                       </button>
                     </td>
                   </tr>
+                  {expandedId === e.id && (
+                    <tr className="sm:hidden bg-[#F8F2EA]/30 border-b border-[#DCD0C3]">
+                      <td colSpan={2} className="p-4 pt-0">
+                        <div className="flex flex-col gap-1 text-sm text-[#5C3D2E]">
+                          <div><span className="font-semibold">Category:</span> {e.category}</div>
+                          <div><span className="font-semibold">Date Added:</span> {new Date(e.created_at).toLocaleDateString()}</div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </React.Fragment>
                 ))
               )}
             </tbody>
@@ -320,38 +436,61 @@ export default function EventsAdmin() {
         )}
       </div>
 
-      <div className="mt-12">
-        <h3 className="text-xl font-bold text-[#2A1A12] mb-6">Manage Categories</h3>
-        <div className="bg-white rounded-xl border border-[#DCD0C3] shadow-sm overflow-hidden max-w-2xl">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-[#F8F2EA] border-b border-[#DCD0C3] text-[#5C3D2E] text-xs uppercase tracking-wider">
-                <th className="p-4 font-bold">Category Title</th>
-                <th className="p-4 font-bold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#DCD0C3]">
-              {categories.length === 0 ? (
-                <tr><td colSpan={2} className="p-8 text-center text-[#5C3D2E]">No categories added yet.</td></tr>
-              ) : (
-                categories.map((c) => (
-                  <tr key={c.id} className="hover:bg-[#F8F2EA]/50 transition-colors">
-                    <td className="p-4 font-medium text-[#2A1A12]">{c.title}</td>
-                    <td className="p-4 text-right">
-                      <button onClick={() => openCategoryEditModal(c)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors mr-1">
-                        <Edit size={16} />
-                      </button>
-                      <button onClick={() => handleCategoryDelete(c.id)} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors">
-                        <Trash2 size={16} />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+      {isManageCategoriesOpen && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="px-6 py-4 border-b border-[#DCD0C3] flex justify-between items-center bg-[#F8F2EA]">
+              <h3 className="font-bold text-[#2A1A12] text-lg">Manage Categories</h3>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search size={16} className="text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search categories..."
+                    value={categorySearchQuery}
+                    onChange={(e) => setCategorySearchQuery(e.target.value)}
+                    className="pl-10 pr-4 py-1.5 border border-[#DCD0C3] rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#8B3A2B] bg-white w-48"
+                  />
+                </div>
+                <button onClick={() => setIsManageCategoriesOpen(false)} className="text-[#5C3D2E] hover:text-[#2A1A12]"><X size={20} /></button>
+              </div>
+            </div>
+            <div className="p-6 overflow-y-auto flex-1">
+              <div className="bg-white rounded-xl border border-[#DCD0C3] shadow-sm overflow-hidden">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-[#F8F2EA] border-b border-[#DCD0C3] text-[#5C3D2E] text-xs uppercase tracking-wider">
+                      <th className="p-4 font-bold">Category Title</th>
+                      <th className="p-4 font-bold text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#DCD0C3]">
+                    {categories.filter(c => c.title.toLowerCase().includes(categorySearchQuery.toLowerCase())).length === 0 ? (
+                      <tr><td colSpan={2} className="p-8 text-center text-[#5C3D2E]">No categories found.</td></tr>
+                    ) : (
+                      categories.filter(c => c.title.toLowerCase().includes(categorySearchQuery.toLowerCase())).map((c) => (
+                        <tr key={c.id} className="hover:bg-[#F8F2EA]/50 transition-colors">
+                          <td className="p-4 font-medium text-[#2A1A12]">{c.title}</td>
+                          <td className="p-4 text-right">
+                            <button onClick={() => openCategoryEditModal(c)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors mr-1">
+                              <Edit size={16} />
+                            </button>
+                            <button onClick={() => handleCategoryDelete(c.id)} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors">
+                              <Trash2 size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Add/Edit Modal */}
       {isModalOpen && (
@@ -363,9 +502,9 @@ export default function EventsAdmin() {
             </div>
             
             <div className="p-6 overflow-y-auto flex-1">
-              <form id="eventForm" onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+              <form id="eventForm" onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <div className="col-span-2">
+                <div className="col-span-1 md:col-span-2">
                   <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Event Images (Max 5) *</label>
                   <div className="flex flex-wrap items-end gap-4">
                     {/* Main Image */}
@@ -408,12 +547,12 @@ export default function EventsAdmin() {
                   {uploadingImage && <p className="text-xs text-[#8B3A2B] mt-2 font-bold animate-pulse">Uploading images, please wait...</p>}
                 </div>
 
-                <div className="col-span-2 sm:col-span-1">
+                <div className="col-span-1">
                   <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Event Title *</label>
                   <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required />
                 </div>
 
-                <div className="col-span-2 sm:col-span-1">
+                <div className="col-span-1">
                   <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Category *</label>
                   <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" required>
                     <option value="">Select Category...</option>
@@ -479,6 +618,33 @@ export default function EventsAdmin() {
         </div>
       )}
 
+      {/* Custom Delete Confirmation Modal */}
+      {deleteConfirm.isOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl p-6 md:p-8 max-w-sm w-full mx-4 border border-[#DCD0C3]">
+            <h3 className="text-xl font-bold text-[#2A1A12] mb-2">Confirm Deletion</h3>
+            <p className="text-[#5C3D2E] text-sm mb-8">
+              {deleteConfirm.type === 'category' 
+                ? 'Are you sure you want to delete this category? Make sure no events are using it.'
+                : 'Are you sure you want to delete this event from the portfolio?'}
+            </p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setDeleteConfirm({ isOpen: false, id: '', type: 'event' })}
+                className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-[#2A1A12] bg-[#F8F2EA] hover:bg-[#EBE2D5] transition-colors"
+              >
+                CANCEL
+              </button>
+              <button 
+                onClick={confirmDelete}
+                className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-white bg-[#8B3A2B] hover:bg-[#6A2A1F] transition-colors"
+              >
+                DELETE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

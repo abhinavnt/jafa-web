@@ -2,13 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
-import { LogOut } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -45,7 +46,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="h-screen bg-[#F8F2EA] flex flex-col relative">
       {/* Top Navbar */}
       <div className="h-16 bg-[#1A110D] text-white px-6 flex justify-between items-center shrink-0 border-b border-white/10 relative z-10">
-        <h1 className="font-lora text-xl tracking-wide">JAFA <span className="text-[#8C7A6B]">Admin</span></h1>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setIsMobileSidebarOpen(true)} 
+            className="md:hidden text-[#DCD0C3] hover:text-white transition-colors"
+          >
+            <Menu size={24} />
+          </button>
+          <h1 className="font-lora text-xl tracking-wide">JAFA <span className="text-[#8C7A6B]">Admin</span></h1>
+        </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-[#DCD0C3] hidden md:inline-block">{user?.email}</span>
           <button 
@@ -58,10 +67,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Main Content Area */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
         <div className="hidden md:block">
           <AdminSidebar />
         </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {isMobileSidebarOpen && (
+          <div className="md:hidden fixed inset-0 z-50 flex">
+            <div 
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setIsMobileSidebarOpen(false)}
+            />
+            <div className="relative w-64 h-full bg-[#2A1A12] shadow-2xl flex-shrink-0 animate-in slide-in-from-left duration-300">
+              <AdminSidebar onClose={() => setIsMobileSidebarOpen(false)} />
+            </div>
+          </div>
+        )}
         
         <div className="flex-1 overflow-y-auto p-4 md:p-8">
           {children}

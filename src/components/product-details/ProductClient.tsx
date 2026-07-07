@@ -6,7 +6,6 @@ import Breadcrumbs from './Breadcrumbs';
 import ImageGallery from './ImageGallery';
 import ProductInfo from './ProductInfo';
 import SizeSelector from './SizeSelector';
-import ProductDescription from './ProductDescription';
 import { getWhatsAppLink } from '@/lib/whatsapp';
 
 interface ProductClientProps {
@@ -125,8 +124,6 @@ export default function ProductClient({ product }: ProductClientProps) {
               {isOutOfStock ? 'This product is currently unavailable' : 'Get in touch for pricing, bulk orders & custom requests'}
             </div>
           </button>
-
-          <ProductDescription description={product.description || ''} />
           
         </div>
       </div>

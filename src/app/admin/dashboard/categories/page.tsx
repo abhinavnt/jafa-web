@@ -9,6 +9,7 @@ export default function CategoriesAdmin() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{isOpen: boolean, id: string}>({isOpen: false, id: ''});
   
   // Form State
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -108,10 +109,14 @@ export default function CategoriesAdmin() {
     fetchCategories();
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
-    await supabase.from('categories').delete().eq('id', id);
+  const handleDelete = (id: string) => {
+    setDeleteConfirm({ isOpen: true, id });
+  };
+
+  const confirmDelete = async () => {
+    await supabase.from('categories').delete().eq('id', deleteConfirm.id);
     fetchCategories();
+    setDeleteConfirm({ isOpen: false, id: '' });
   };
 
   const openEditModal = (category: any) => {
@@ -141,7 +146,7 @@ export default function CategoriesAdmin() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
             <LayoutGrid size={24} className="text-[#8B3A2B]" />
@@ -167,15 +172,14 @@ export default function CategoriesAdmin() {
             <thead>
               <tr className="bg-[#F8F2EA] border-b border-[#DCD0C3] text-[#5C3D2E] text-xs uppercase tracking-wider">
                 <th className="p-4 font-bold">Category</th>
-                <th className="p-4 font-bold">Description</th>
                 <th className="p-4 font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#DCD0C3]">
               {loading ? (
-                <tr><td colSpan={3} className="p-8 text-center text-[#5C3D2E]">Loading categories...</td></tr>
+                <tr><td colSpan={2} className="p-8 text-center text-[#5C3D2E]">Loading categories...</td></tr>
               ) : categories.length === 0 ? (
-                <tr><td colSpan={3} className="p-8 text-center text-[#5C3D2E]">No categories found.</td></tr>
+                <tr><td colSpan={2} className="p-8 text-center text-[#5C3D2E]">No categories found.</td></tr>
               ) : (
                 categories.map((c) => (
                   <tr key={c.id} className="hover:bg-[#F8F2EA]/50 transition-colors">
@@ -189,7 +193,6 @@ export default function CategoriesAdmin() {
                         <span className="font-medium text-[#2A1A12]">{c.title}</span>
                       </div>
                     </td>
-                    <td className="p-4 text-[#5C3D2E] text-sm max-w-xs truncate">{c.description}</td>
                     <td className="p-4 text-right flex items-center justify-end gap-1">
                       <button 
                         onClick={() => handleMoveUp(categories.indexOf(c))} 
@@ -289,6 +292,31 @@ export default function CategoriesAdmin() {
         </div>
       )}
 
+      {/* Custom Delete Confirmation Modal */}
+      {deleteConfirm.isOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl p-6 md:p-8 max-w-sm w-full mx-4 border border-[#DCD0C3]">
+            <h3 className="text-xl font-bold text-[#2A1A12] mb-2">Confirm Deletion</h3>
+            <p className="text-[#5C3D2E] text-sm mb-8">
+              Are you sure you want to delete this category?
+            </p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setDeleteConfirm({ isOpen: false, id: '' })}
+                className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-[#2A1A12] bg-[#F8F2EA] hover:bg-[#EBE2D5] transition-colors"
+              >
+                CANCEL
+              </button>
+              <button 
+                onClick={confirmDelete}
+                className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-white bg-[#8B3A2B] hover:bg-[#6A2A1F] transition-colors"
+              >
+                DELETE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
