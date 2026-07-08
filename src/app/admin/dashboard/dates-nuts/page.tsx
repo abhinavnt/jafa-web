@@ -736,25 +736,53 @@ export default function DatesNutsAdmin() {
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-xl p-6 md:p-8 max-w-sm w-full mx-4 border border-[#DCD0C3]">
             <h3 className="text-xl font-bold text-[#2A1A12] mb-2">Confirm Deletion</h3>
-            <p className="text-[#5C3D2E] text-sm mb-8">
-              {deleteConfirm.type === 'category' 
-                ? 'Are you sure you want to delete this category? Make sure no products are using it.'
-                : 'Are you sure you want to delete this product?'}
-            </p>
-            <div className="flex gap-4">
-              <button 
-                onClick={() => setDeleteConfirm({ isOpen: false, id: '', type: 'product' })}
-                className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-[#2A1A12] bg-[#F8F2EA] hover:bg-[#EBE2D5] transition-colors"
-              >
-                CANCEL
-              </button>
-              <button 
-                onClick={confirmDelete}
-                className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-white bg-[#8B3A2B] hover:bg-[#6A2A1F] transition-colors"
-              >
-                DELETE
-              </button>
-            </div>
+            
+            {(() => {
+              const categoryToDelete = categories.find(c => c.id === deleteConfirm.id);
+              const isInUse = deleteConfirm.type === 'category' && categoryToDelete && products.some(p => p.category === categoryToDelete.title);
+              
+              if (isInUse) {
+                return (
+                  <>
+                    <p className="text-red-600 text-sm mb-8 font-medium">
+                      Cannot delete this category because it is currently assigned to one or more products. Please reassign or delete those products first.
+                    </p>
+                    <div className="flex gap-4">
+                      <button 
+                        onClick={() => setDeleteConfirm({ isOpen: false, id: '', type: 'product' })}
+                        className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-white bg-[#8B3A2B] hover:bg-[#6A2A1F] transition-colors"
+                      >
+                        OKAY
+                      </button>
+                    </div>
+                  </>
+                );
+              }
+              
+              return (
+                <>
+                  <p className="text-[#5C3D2E] text-sm mb-8">
+                    {deleteConfirm.type === 'category' 
+                      ? 'Are you sure you want to delete this category? Make sure no products are using it.'
+                      : 'Are you sure you want to delete this product?'}
+                  </p>
+                  <div className="flex gap-4">
+                    <button 
+                      onClick={() => setDeleteConfirm({ isOpen: false, id: '', type: 'product' })}
+                      className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-[#2A1A12] bg-[#F8F2EA] hover:bg-[#EBE2D5] transition-colors"
+                    >
+                      CANCEL
+                    </button>
+                    <button 
+                      onClick={confirmDelete}
+                      className="flex-1 px-4 py-2.5 rounded text-sm font-bold tracking-wider text-white bg-[#8B3A2B] hover:bg-[#6A2A1F] transition-colors"
+                    >
+                      DELETE
+                    </button>
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </div>
       )}
