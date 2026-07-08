@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
+import ImageCropperModal from '@/components/admin/ImageCropperModal';
 import { Plus, Trash2, Edit, X, Gift, FolderPlus, Image as ImageIcon, Search } from 'lucide-react';
 import { deleteCloudinaryImage } from '@/app/actions/cloudinary';
 import { IconMap, availableIcons } from '@/lib/icons';
@@ -13,6 +14,7 @@ export default function GiftsAdmin() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [cropQueue, setCropQueue] = useState<string[]>([]);
   
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -101,7 +103,7 @@ export default function GiftsAdmin() {
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
 
@@ -111,33 +113,8 @@ export default function GiftsAdmin() {
       return;
     }
 
-    setUploadingImage(true);
-    try {
-      const uploadedUrls: string[] = [];
-      for (const file of files) {
-        const url = await uploadImageToCloudinary(file);
-        uploadedUrls.push(url);
-      }
-      
-      setFormData(prev => {
-        let newImage = prev.image;
-        let newGallery = [...prev.gallery_images];
-        
-        uploadedUrls.forEach(url => {
-          if (!newImage) {
-            newImage = url;
-          } else {
-            newGallery.push(url);
-          }
-        });
-        
-        return { ...prev, image: newImage, gallery_images: newGallery };
-      });
-    } catch (error: any) {
-      alert("Image upload failed: " + error.message);
-    } finally {
-      setUploadingImage(false);
-    }
+    const urls = files.map(f => URL.createObjectURL(f));
+    setCropQueue(prev => [...prev, ...urls]);
   };
 
   const removeImage = async (index: number) => {
@@ -780,6 +757,35 @@ export default function GiftsAdmin() {
             </div>
           </div>
         </div>
+      )}
+
+      {cropQueue.length > 0 && (
+        <ImageCropperModal
+          imageSrc={cropQueue[0]}
+          aspectRatio={1}
+          onClose={() => setCropQueue(prev => prev.slice(1))}
+          onCropComplete={async (croppedFile) => {
+            setUploadingImage(true);
+            try {
+              const url = await uploadImageToCloudinary(croppedFile);
+              setFormData(prev => {
+                let newImage = prev.image;
+                let newGallery = [...prev.gallery_images];
+                if (!newImage) {
+                  newImage = url;
+                } else {
+                  newGallery.push(url);
+                }
+                return { ...prev, image: newImage, gallery_images: newGallery };
+              });
+            } catch (error: any) {
+              alert("Image upload failed: " + error.message);
+            } finally {
+              setUploadingImage(false);
+              setCropQueue(prev => prev.slice(1));
+            }
+          }}
+        />
       )}
     </div>
   );

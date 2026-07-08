@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
+import ImageCropperModal from '@/components/admin/ImageCropperModal';
 import { Plus, Trash2, Edit, X, CalendarHeart, FolderPlus, Image as ImageIcon, Search } from 'lucide-react';
 import { deleteCloudinaryImage } from '@/app/actions/cloudinary';
 import { IconMap, availableIcons } from '@/lib/icons';
@@ -13,6 +14,7 @@ export default function EventsAdmin() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [cropQueue, setCropQueue] = useState<string[]>([]);
   
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -25,6 +27,12 @@ export default function EventsAdmin() {
     category: '',
     image: '',
     gallery_images: [] as string[],
+    description: '',
+    about_event: '',
+    event_location: '',
+    guest_capacity: '',
+    duration: '',
+    our_service: ''
   });
 
   const [categoryFormData, setCategoryFormData] = useState({ id: '', title: '', icon: '' });
@@ -93,7 +101,7 @@ export default function EventsAdmin() {
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
 
@@ -103,33 +111,8 @@ export default function EventsAdmin() {
       return;
     }
 
-    setUploadingImage(true);
-    try {
-      const uploadedUrls: string[] = [];
-      for (const file of files) {
-        const url = await uploadImageToCloudinary(file);
-        uploadedUrls.push(url);
-      }
-      
-      setFormData(prev => {
-        let newImage = prev.image;
-        let newGallery = [...prev.gallery_images];
-        
-        uploadedUrls.forEach(url => {
-          if (!newImage) {
-            newImage = url;
-          } else {
-            newGallery.push(url);
-          }
-        });
-        
-        return { ...prev, image: newImage, gallery_images: newGallery };
-      });
-    } catch (error: any) {
-      alert("Image upload failed: " + error.message);
-    } finally {
-      setUploadingImage(false);
-    }
+    const urls = files.map(f => URL.createObjectURL(f));
+    setCropQueue(prev => [...prev, ...urls]);
   };
 
   const removeImage = async (index: number) => {
@@ -245,13 +228,23 @@ export default function EventsAdmin() {
       category: eventItem.category || '',
       image: eventItem.image || '',
       gallery_images: eventItem.gallery_images || [],
+      description: eventItem.description || '',
+      about_event: eventItem.about_event || '',
+      event_location: eventItem.event_location || '',
+      guest_capacity: eventItem.guest_capacity || '',
+      duration: eventItem.duration || '',
+      our_service: eventItem.our_service || ''
     });
     setIsModalOpen(true);
   };
 
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ title: '', category: '', image: '', gallery_images: [] });
+    setFormData({ 
+      title: '', category: '', image: '', gallery_images: [],
+      description: '', about_event: '', event_location: '',
+      guest_capacity: '', duration: '', our_service: ''
+    });
     setIsModalOpen(true);
   };
 
@@ -562,6 +555,36 @@ export default function EventsAdmin() {
                   </select>
                 </div>
 
+                <div className="col-span-1 md:col-span-2">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Short Description</label>
+                  <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" rows={2} />
+                </div>
+
+                <div className="col-span-1 md:col-span-2">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">About Event</label>
+                  <textarea value={formData.about_event} onChange={e => setFormData({...formData, about_event: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" rows={4} />
+                </div>
+
+                <div className="col-span-1">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Event Location</label>
+                  <input type="text" value={formData.event_location} onChange={e => setFormData({...formData, event_location: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
+                </div>
+
+                <div className="col-span-1">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Guest Capacity</label>
+                  <input type="text" value={formData.guest_capacity} onChange={e => setFormData({...formData, guest_capacity: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
+                </div>
+
+                <div className="col-span-1">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Duration</label>
+                  <input type="text" value={formData.duration} onChange={e => setFormData({...formData, duration: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
+                </div>
+
+                <div className="col-span-1">
+                  <label className="block text-[#5C3D2E] text-xs font-bold uppercase tracking-wider mb-2">Our Service</label>
+                  <input type="text" value={formData.our_service} onChange={e => setFormData({...formData, our_service: e.target.value})} className="w-full px-3 py-2 bg-[#F8F2EA] border border-[#DCD0C3] rounded focus:outline-none focus:border-[#8B3A2B]" />
+                </div>
+
               </form>
             </div>
             
@@ -644,6 +667,35 @@ export default function EventsAdmin() {
             </div>
           </div>
         </div>
+      )}
+
+      {cropQueue.length > 0 && (
+        <ImageCropperModal
+          imageSrc={cropQueue[0]}
+          aspectRatio={16/9}
+          onClose={() => setCropQueue(prev => prev.slice(1))}
+          onCropComplete={async (croppedFile) => {
+            setUploadingImage(true);
+            try {
+              const url = await uploadImageToCloudinary(croppedFile);
+              setFormData(prev => {
+                let newImage = prev.image;
+                let newGallery = [...prev.gallery_images];
+                if (!newImage) {
+                  newImage = url;
+                } else {
+                  newGallery.push(url);
+                }
+                return { ...prev, image: newImage, gallery_images: newGallery };
+              });
+            } catch (error: any) {
+              alert("Image upload failed: " + error.message);
+            } finally {
+              setUploadingImage(false);
+              setCropQueue(prev => prev.slice(1));
+            }
+          }}
+        />
       )}
     </div>
   );

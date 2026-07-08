@@ -46,7 +46,7 @@ export default function ImageGallery({ images, badge, status }: ImageGalleryProp
       </div>
 
       {/* Main Image */}
-      <div className="relative w-full aspect-[4/3] md:aspect-square lg:aspect-[4/3] bg-[#EAE2D8] rounded-2xl md:rounded-[32px] overflow-hidden group">
+      <div className="relative w-full aspect-square bg-[#EAE2D8] rounded-2xl md:rounded-[32px] overflow-hidden group">
         
         {/* Badge */}
         {isOutOfStock ? (

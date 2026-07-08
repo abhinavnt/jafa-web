@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
+import ImageCropperModal from '@/components/admin/ImageCropperModal';
 import { Plus, Trash2, MessageSquareQuote, Edit2, Image as ImageIcon, X, Search } from 'lucide-react';
 
 export default function TestimonialsAdmin() {
@@ -18,6 +19,7 @@ export default function TestimonialsAdmin() {
   
   const [submitting, setSubmitting] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [cropQueue, setCropQueue] = useState<string[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<{isOpen: boolean, id: string}>({isOpen: false, id: ''});
@@ -39,19 +41,12 @@ export default function TestimonialsAdmin() {
     fetchTestimonials();
   }, []);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploadingImage(true);
-    try {
-      const url = await uploadImageToCloudinary(file);
-      setAvatar(url);
-    } catch (error: any) {
-      alert("Image upload failed: " + error.message);
-    } finally {
-      setUploadingImage(false);
-    }
+    const url = URL.createObjectURL(file);
+    setCropQueue([url]);
   };
 
   const handleEdit = (t: any) => {
@@ -366,6 +361,26 @@ export default function TestimonialsAdmin() {
             </div>
           </div>
         </div>
+      )}
+
+      {cropQueue.length > 0 && (
+        <ImageCropperModal
+          imageSrc={cropQueue[0]}
+          aspectRatio={1}
+          onClose={() => setCropQueue([])}
+          onCropComplete={async (croppedFile) => {
+            setUploadingImage(true);
+            try {
+              const url = await uploadImageToCloudinary(croppedFile);
+              setAvatar(url);
+            } catch (error: any) {
+              alert("Image upload failed: " + error.message);
+            } finally {
+              setUploadingImage(false);
+              setCropQueue([]);
+            }
+          }}
+        />
       )}
     </div>
   );

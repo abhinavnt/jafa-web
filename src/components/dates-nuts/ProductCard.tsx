@@ -33,10 +33,10 @@ export default function ProductCard({ product, basePath = '/dates-nuts' }: Produ
   const isOutOfStock = product.status === 'Out of Stock';
 
   return (
-    <Link href={`${basePath}/${product.id}`} className={`bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group cursor-pointer border border-[#E2D2C2] aspect-square ${isOutOfStock ? 'opacity-75 grayscale-[0.5]' : ''}`}>
+    <Link href={`${basePath}/${product.id}`} className={`bg-[#EBE2D5] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full group cursor-pointer border border-[#E2D2C2] ${isOutOfStock ? 'opacity-75 grayscale-[0.5]' : ''}`}>
       
       {/* Image Area */}
-      <div className="relative h-[55%] w-full bg-[#EAE2D8]">
+      <div className="relative aspect-square w-full bg-[#EAE2D8] shrink-0">
         {/* Badge */}
         {isOutOfStock ? (
           <div className="absolute top-1.5 left-1.5 md:top-2 md:left-2 bg-red-800 text-white font-bold text-[8px] md:text-[9px] rounded-sm px-1.5 py-1 z-10 text-center leading-none shadow-sm">
@@ -62,7 +62,7 @@ export default function ProductCard({ product, basePath = '/dates-nuts' }: Produ
       </div>
 
       {/* Content Area */}
-      <div className="p-2 md:p-3 flex flex-col flex-grow bg-[#EFE9E2] h-[45%]">
+      <div className="p-2 md:p-3 flex flex-col flex-grow bg-[#EFE9E2]">
         <h4 className="font-lora text-[#2A1A12] text-[11px] sm:text-[12px] md:text-[13px] font-bold mb-1 leading-tight line-clamp-2">
           {product.title}
         </h4>

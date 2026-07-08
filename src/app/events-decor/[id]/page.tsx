@@ -49,14 +49,14 @@ export default async function EventDetailsPage({ params }: EventPageProps) {
     category: dbEvent.category,
     image: dbEvent.image,
     images: [dbEvent.image, ...(dbEvent.gallery_images || [])].filter(Boolean),
-    description: 'A beautiful event curated perfectly for your special day.',
-    aboutEvent: 'Experience the perfection and elegance of this event, tailored specifically to create unforgettable moments.',
+    description: dbEvent.description || 'A beautiful event curated perfectly for your special day.',
+    aboutEvent: dbEvent.about_event || 'Experience the perfection and elegance of this event, tailored specifically to create unforgettable moments.',
     specs: {
       eventType: dbEvent.category,
-      guestCapacity: 'Flexible',
-      eventLocation: 'Indoor / Outdoor',
-      duration: 'Flexible',
-      ourService: 'Full Planning & Management'
+      guestCapacity: dbEvent.guest_capacity || 'Flexible',
+      eventLocation: dbEvent.event_location || 'Indoor / Outdoor',
+      duration: dbEvent.duration || 'Flexible',
+      ourService: dbEvent.our_service || 'Full Planning & Management'
     }
   };
 

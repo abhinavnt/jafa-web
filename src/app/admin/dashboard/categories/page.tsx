@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
+import ImageCropperModal from '@/components/admin/ImageCropperModal';
 import { Plus, Trash2, Edit, X, Image as ImageIcon, LayoutGrid, ArrowUp, ArrowDown } from 'lucide-react';
 
 export default function CategoriesAdmin() {
@@ -9,6 +10,7 @@ export default function CategoriesAdmin() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [cropQueue, setCropQueue] = useState<string[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{isOpen: boolean, id: string}>({isOpen: false, id: ''});
   
   // Form State
@@ -37,19 +39,12 @@ export default function CategoriesAdmin() {
     fetchCategories();
   }, []);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploadingImage(true);
-    try {
-      const url = await uploadImageToCloudinary(file);
-      setFormData(prev => ({ ...prev, image: url }));
-    } catch (error: any) {
-      alert("Image upload failed: " + error.message);
-    } finally {
-      setUploadingImage(false);
-    }
+    const url = URL.createObjectURL(file);
+    setCropQueue([url]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -316,6 +311,26 @@ export default function CategoriesAdmin() {
             </div>
           </div>
         </div>
+      )}
+
+      {cropQueue.length > 0 && (
+        <ImageCropperModal
+          imageSrc={cropQueue[0]}
+          aspectRatio={1}
+          onClose={() => setCropQueue([])}
+          onCropComplete={async (croppedFile) => {
+            setUploadingImage(true);
+            try {
+              const url = await uploadImageToCloudinary(croppedFile);
+              setFormData(prev => ({ ...prev, image: url }));
+            } catch (error: any) {
+              alert("Image upload failed: " + error.message);
+            } finally {
+              setUploadingImage(false);
+              setCropQueue([]);
+            }
+          }}
+        />
       )}
     </div>
   );
