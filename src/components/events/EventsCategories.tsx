@@ -29,7 +29,7 @@ export default function EventsCategories({ activeCategory, onSelectCategory, cat
               onClick={() => onSelectCategory(category.id)}
               className={`flex-shrink-0 w-[120px] md:w-auto snap-center flex flex-col items-center justify-center text-center p-4 md:p-6 rounded-2xl transition-all border ${
                 isActive 
-                  ? 'bg-[#EAE2D8] border-[#B89B82] shadow-sm scale-105' 
+                  ? 'bg-[#EAE2D8] border-[#B89B82] shadow-sm' 
                   : 'bg-transparent border-[#DCD0C3] hover:bg-[#F8F2EA] hover:border-[#B89B82]'
               }`}
             >
