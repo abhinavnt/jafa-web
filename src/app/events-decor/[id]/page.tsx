@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: EventPageProps) {
   };
 }
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function EventDetailsPage({ params }: EventPageProps) {
   const resolvedParams = await params;

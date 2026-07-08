@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: GiftPageProps) {
   };
 }
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function GiftDetailsPage({ params }: GiftPageProps) {
   const resolvedParams = await params;

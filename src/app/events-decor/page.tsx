@@ -11,7 +11,7 @@ export const metadata = {
   description: 'From intimate celebrations to grand events, we design with passion and perfection to create unforgettable experiences.',
 };
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function EventsDecorPage() {
   try {

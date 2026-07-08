@@ -11,7 +11,7 @@ export const metadata = {
   description: 'From luxurious hampers to elegant keepsakes, find the perfect gift for every celebration at Jafa.',
 };
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function GiftsPage() {
   try {

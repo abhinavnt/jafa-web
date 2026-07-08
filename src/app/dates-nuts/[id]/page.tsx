@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: ProductPageProps) {
   };
 }
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function ProductDetailsPage({ params }: ProductPageProps) {
   const resolvedParams = await params;
