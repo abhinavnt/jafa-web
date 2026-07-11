@@ -27,7 +27,7 @@ export default function ProductClient({ product }: ProductClientProps) {
   const handleWhatsApp = () => {
     const selectedVariant = hasVariants ? product.variants![activeVariantIndex] : null;
     const message = `Hi, I am interested in ${product.title}${selectedVariant ? ` (${selectedVariant.name})` : ''}.\n\nProduct Link: ${window.location.href}`;
-    window.open(getWhatsAppLink(message), '_blank');
+    window.open(getWhatsAppLink(message, 'dates-nuts'), '_blank');
   };
 
   const displayPrice = hasVariants ? product.variants![activeVariantIndex].price : product.price;

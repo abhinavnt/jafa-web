@@ -32,7 +32,7 @@ export default function GiftProductClient({ product }: GiftProductClientProps) {
       message = `Hi Jafa! I'm interested in the ${product.title} (${selectedVariant.name}).`;
     }
     message += `\n\nProduct Link: ${window.location.href}`;
-    window.open(getWhatsAppLink(message), '_blank');
+    window.open(getWhatsAppLink(message, 'gifts'), '_blank');
   };
 
   const displayPrice = hasVariants ? product.variants![activeVariantIndex].price : product.price;

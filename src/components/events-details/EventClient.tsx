@@ -39,7 +39,7 @@ export default function EventClient({ event }: EventClientProps) {
 
   const handleWhatsApp = () => {
     const message = `Hi Jafa! I'm interested in the ${event.title} event decor service.\n\nEvent Link: ${window.location.href}`;
-    window.open(getWhatsAppLink(message), '_blank');
+    window.open(getWhatsAppLink(message, 'events'), '_blank');
   };
 
   return (
